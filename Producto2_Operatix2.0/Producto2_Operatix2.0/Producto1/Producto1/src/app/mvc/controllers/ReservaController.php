@@ -2,8 +2,12 @@
 
 namespace app\mvc\controllers;
 
+require_once __DIR__ . '/../models/Reserva.php';
+use app\mvc\models\Reserva;
+
 use PDO;
 use PDOException;
+
 
 class ReservaController
 {
@@ -33,6 +37,23 @@ class ReservaController
             echo "Error al obtener las reservas del hotel: " . $e->getMessage();
         }
     }
+
+    public function listarReservas()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    
+        if (!isset($_SESSION['email'])) {
+            echo "Usuario no autenticado.";
+            exit;
+        }
+    
+        $emailCliente = $_SESSION['email'];
+        $reservas = Reserva::obtenerPorEmailCliente($emailCliente);
+    
+    }
+
 
     public function crearReserva($data)
     {

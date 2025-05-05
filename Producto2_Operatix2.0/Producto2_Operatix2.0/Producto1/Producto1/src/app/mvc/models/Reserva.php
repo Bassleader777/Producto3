@@ -3,6 +3,7 @@
 
 namespace app\mvc\models;
 
+
 class Reserva
 {
 
@@ -48,6 +49,46 @@ class Reserva
         $this->num_viajeros = $num_viajeros;
         $this->id_vehiculo = $id_vehiculo;
     }
+
+    public static function obtenerPorEmailCliente($email)
+{
+    try {
+        $pdo = new \PDO("mysql:host=db;dbname=isla_transfers", "root", "adminadmin");
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+        $stmt = $pdo->prepare("SELECT * FROM transfer_reservas WHERE email_cliente = ?");
+        $stmt->execute([$email]);
+
+        $reservas = [];
+        while ($fila = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $reservas[] = new Reserva(
+                $fila['id_reserva'],
+                $fila['localizador'],
+                $fila['id_hotel'],
+                $fila['id_tipo_reserva'],
+                $fila['email_cliente'],
+                $fila['fecha_reserva'],
+                $fila['fecha_modificacion'],
+                $fila['id_destino'],
+                $fila['fecha_entrada'],
+                $fila['hora_entrada'],
+                $fila['numero_vuelo_entrada'],
+                $fila['origen_vuelo_entrada'],
+                $fila['hora_vuelo_salida'],
+                $fila['fecha_vuelo_salida'],
+                $fila['num_viajeros'],
+                $fila['id_vehiculo']
+            );
+        }
+
+        return $reservas;
+
+    } catch (\PDOException $e) {
+        echo "Error al obtener reservas del cliente: " . $e->getMessage();
+        return [];
+    }
+}
+
 
     // Getters (para leer valores)
     public function getIdReserva()
