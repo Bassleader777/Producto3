@@ -13,10 +13,22 @@ class ReservaController extends Controller
 {
     public function listarReservas()
     {
-        $reservas = Reserva::all();
+        if (!Auth::check()) {
+            return redirect()->route('login.form')->with('error', 'Debes iniciar sesión.');
+        }
+    
+        $usuario = Auth::user();
+    
+        if ($usuario->tipo_cliente === 'administrador') {
+            // El administrador ve todas las reservas
+            $reservas = Reserva::all();
+        } else {
+            // El cliente solo ve sus reservas
+            $reservas = Reserva::where('email_cliente', $usuario->email)->get();
+        }
+    
         return view('reservas.listar', compact('reservas'));
     }
-
     public function formCrear()
     {
         $hoteles = Hotel::all();
@@ -34,6 +46,8 @@ class ReservaController extends Controller
 
     public function crearReserva(Request $request)
     {
+       // dd($request->all());
+
         $request->validate([
             'id_hotel' => 'required|integer',
             'id_tipo_reserva' => 'required|integer',
@@ -41,6 +55,7 @@ class ReservaController extends Controller
             'hora_entrada' => 'nullable|date_format:H:i',
             'num_viajeros' => 'required|integer|min:1',
             'numero_vuelo_entrada' => 'required|string',
+            'precio' => 'required|numeric|min:0',
         ]);
 
         try {
@@ -67,9 +82,13 @@ class ReservaController extends Controller
                 'num_viajeros' => $request->num_viajeros,
                 'id_destino' => $idDestino,
                 'id_vehiculo' => $idVehiculo,
+                'precio' => $request->precio,
+                'fecha_reserva' => now(), 
+                'fecha_modificacion' => now(),
             ]);
 
             $reserva->save();
+           
 
             return redirect()->route('reserva.listar')->with('success', 'Reserva creada con éxito.');
         } catch (\Exception $e) {
@@ -102,6 +121,7 @@ class ReservaController extends Controller
         $reserva->fecha_entrada = $request->fecha_entrada;
         $reserva->hora_entrada = $request->hora_entrada;
         $reserva->num_viajeros = $request->num_viajeros;
+        $reserva->fecha_modificacion = now();
         $reserva->save();
 
         return redirect()->route('reserva.listar')->with('success', 'Reserva modificada con éxito.');

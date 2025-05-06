@@ -22,7 +22,7 @@ class Reserva extends Model
     protected $fillable = [
         'localizador', 'id_hotel', 'id_tipo_reserva', 'email_cliente', 'fecha_reserva', 'fecha_modificacion',
         'id_destino', 'fecha_entrada', 'hora_entrada', 'numero_vuelo_entrada', 'origen_vuelo_entrada',
-        'hora_vuelo_salida', 'fecha_vuelo_salida', 'num_viajeros', 'id_vehiculo'
+        'hora_vuelo_salida', 'fecha_vuelo_salida', 'num_viajeros', 'id_vehiculo', 'precio'
     ];
 
     // Definir los métodos de acceso (getters)

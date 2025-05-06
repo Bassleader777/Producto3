@@ -13,10 +13,6 @@
 
     @if (!empty($reservas) && is_iterable($reservas))
         @foreach ($reservas as $reserva)
-            @if (
-                session('tipo_cliente') === 'administrador' ||
-                (session('email') && $reserva->email_cliente === session('email'))
-            )
                 <div class="reserva">
                     <h3>Reserva: {{ $reserva->localizador ?? '' }}</h3>
                     <p><strong>Hotel:</strong> {{ $reserva->id_hotel ?? '' }}</p>
@@ -45,7 +41,6 @@
                         @endif
                     </div>
                 </div>
-            @endif
         @endforeach
     @else
         <p>No tienes reservas disponibles.</p>
