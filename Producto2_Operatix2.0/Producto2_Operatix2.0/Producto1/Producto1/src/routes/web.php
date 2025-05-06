@@ -25,7 +25,7 @@ Route::prefix('cliente')->middleware('auth')->group(function () {
 
     // Perfil
     Route::get('/perfil', [ClienteController::class, 'viewProfile'])->name('cliente.perfil');
-    Route::post('/perfil', [ClienteController::class, 'actualizarPerfil'])->name('cliente.perfil.actualizar'); // ✅ Corrección aquí
+    Route::post('/perfil', [ClienteController::class, 'actualizarPerfil'])->name('cliente.perfil.actualizar');
 
     Route::get('/logout', [ClienteController::class, 'logout'])->name('cliente.logout');
 });
@@ -33,7 +33,6 @@ Route::prefix('cliente')->middleware('auth')->group(function () {
 // Registro (público)
 Route::get('/cliente/registro', [ClienteController::class, 'formRegistro'])->name('cliente.registro.form');
 Route::post('/cliente/registro', [ClienteController::class, 'registrarCliente'])->name('cliente.registro');
-
 
 // === HOTEL ===
 Route::prefix('hotel')->middleware('auth')->group(function () {
@@ -45,7 +44,6 @@ Route::post('/hotel/registro', [HotelController::class, 'registrar'])->name('hot
 
 // === RESERVAS ===
 Route::prefix('reserva')->middleware('auth')->group(function () {
-    // Crear reserva (solo se necesita esto si usas el controlador)
     Route::get('/crear', [ReservaController::class, 'formCrear'])->name('reserva.crear.form');
     Route::post('/crear', [ReservaController::class, 'crearReserva'])->name('reserva.crear');
 
@@ -59,7 +57,6 @@ Route::prefix('reserva')->middleware('auth')->group(function () {
 
     Route::get('/calendario', [ReservaController::class, 'mostrarCalendario'])->name('reserva.calendario');
 
-    // Gestión adicional
     Route::get('/gestionar/hoteles', fn() => view('Reservas.gestionar_hoteles'))->name('reserva.hoteles.gestionar');
     Route::get('/gestionar/vehiculos', fn() => view('Reservas.gestionar_vehiculos'))->name('reserva.vehiculos.gestionar');
 
@@ -70,15 +67,18 @@ Route::prefix('reserva')->middleware('auth')->group(function () {
     Route::get('/modificar/cliente', fn() => view('Reservas.modificar_Reserva'))->name('reserva.modificar.cliente');
 });
 
-
 // === ADMINISTRACIÓN ===
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/home', fn() => view('Admin.home_admin'))->name('admin.home');
     Route::get('/reportes', fn() => view('Admin.reportes_actividad'))->name('admin.reportes');
 
-    Route::get('/usuarios', fn() => view('Admin.gestionar_usuarios'))->name('admin.usuarios');
-    Route::get('/usuarios/{id}/editar', fn() => view('Admin.editar_usuario'))->name('admin.usuarios.editar');
+    // Gestión de usuarios
+    Route::get('/usuarios', [AdminController::class, 'obtenerTodosLosUsuarios'])->name('admin.usuarios');
+    Route::get('/usuarios/{id}/editar', [AdminController::class, 'editarUsuario'])->name('admin.usuarios.editar');
+    Route::post('/usuarios/{id}/actualizar', [AdminController::class, 'actualizarUsuario'])->name('admin.usuarios.actualizar');
+    Route::get('/usuarios/{id}/eliminar', [AdminController::class, 'eliminarUsuario'])->name('admin.usuarios.eliminar');
 
+    // Gestión de reservas
     Route::get('/reservas/calendario', fn() => view('Admin.calendario_reservas_admin'))->name('admin.reservas.calendario');
     Route::get('/reservas/crear', fn() => view('Admin.crear_reserva_admin'))->name('admin.reservas.crear');
 });

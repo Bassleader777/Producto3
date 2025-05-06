@@ -3,52 +3,68 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Cliente; // Asegúrate de tener este modelo en Laravel
+use App\Models\Cliente;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    // Método para editar el usuario
+    // Mostrar listado de todos los usuarios
+    public function obtenerTodosLosUsuarios()
+    {
+        $usuarios = Cliente::all();
+        return view('Admin.gestionar_usuarios', compact('usuarios'));
+    }
+
+    // Mostrar formulario para editar un usuario
     public function editarUsuario($id)
     {
-        // Buscar al usuario por su ID
         $usuario = Cliente::find($id);
 
         if (!$usuario) {
-            // Si no se encuentra el usuario, redirigimos con un mensaje de error
             return redirect()->route('admin.usuarios')->with('error', '❌ Usuario no encontrado.');
         }
 
-        // Si encontramos el usuario, cargamos la vista para editar
         return view('Admin.editar_usuario', compact('usuario'));
     }
 
-    // Método para actualizar el usuario
+    // Actualizar datos del usuario
     public function actualizarUsuario(Request $request, $id)
     {
-        // Validación de datos
-        $data = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'email' => 'required|email|unique:clientes,email,' . $id,
-            'password' => 'nullable|string|min:8|confirmed',  // Confirmación de la contraseña
+        $request->validate([
+            'nombre'   => 'required|string|max:255',
+            'email'    => 'required|email|unique:clientes,email,' . $id . ',id_viajero',
+            'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        // Buscar al usuario
         $usuario = Cliente::find($id);
 
         if (!$usuario) {
             return redirect()->route('admin.usuarios')->with('error', '❌ Usuario no encontrado.');
         }
 
-        // Actualizamos los datos del usuario
-        $usuario->update($data);
+        $usuario->nombre = $request->nombre;
+        $usuario->email = $request->email;
 
-        // Si la contraseña es nueva, la encriptamos
-        if ($request->has('password')) {
-            $usuario->password = bcrypt($request->input('password'));
-            $usuario->save();
+        if ($request->filled('password')) {
+            $usuario->password = Hash::make($request->password);
         }
 
-        // Redirigir con un mensaje de éxito
+        $usuario->save();
+
         return redirect()->route('admin.usuarios')->with('mensaje', '✅ Usuario actualizado correctamente.');
+    }
+
+    // Eliminar un usuario
+    public function eliminarUsuario($id)
+    {
+        $usuario = Cliente::find($id);
+
+        if (!$usuario) {
+            return redirect()->route('admin.usuarios')->with('error', '❌ Usuario no encontrado.');
+        }
+
+        $usuario->delete();
+
+        return redirect()->route('admin.usuarios')->with('mensaje', '✅ Usuario eliminado correctamente.');
     }
 }
