@@ -26,7 +26,6 @@ Route::prefix('cliente')->middleware('auth')->group(function () {
     // Perfil
     Route::get('/perfil', [ClienteController::class, 'viewProfile'])->name('cliente.perfil');
     Route::post('/perfil', [ClienteController::class, 'actualizarPerfil'])->name('cliente.perfil.actualizar');
-
     Route::get('/logout', [ClienteController::class, 'logout'])->name('cliente.logout');
 });
 
