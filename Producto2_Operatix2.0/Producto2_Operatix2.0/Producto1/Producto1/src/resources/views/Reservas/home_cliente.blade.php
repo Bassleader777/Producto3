@@ -28,7 +28,7 @@
     <li><a href="{{ route('cliente.perfil') }}">👤 Editar Perfil</a></li>
     <li><a href="{{ route('cliente.logout') }}">🚪 Cerrar sesión</a></li>
     </ul>
-
+    @yield('content')  <!-- 👈 Añade esto -->
 </div>
 
 </body>

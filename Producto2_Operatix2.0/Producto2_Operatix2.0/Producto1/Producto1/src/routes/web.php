@@ -47,9 +47,9 @@ Route::post('/hotel/registro', [HotelController::class, 'registrar'])->name('hot
 Route::prefix('reserva')->middleware('auth')->group(function () {
     // Crear reserva (solo se necesita esto si usas el controlador)
     Route::get('/crear', [ReservaController::class, 'formCrear'])->name('reserva.crear.form');
-    Route::post('/crear', [ReservaController::class, 'crear'])->name('reserva.crear');
+    Route::post('/crear', [ReservaController::class, 'crearReserva'])->name('reserva.crear');
 
-    Route::get('/listar', [ReservaController::class, 'listar'])->name('reserva.listar');
+    Route::get('/listar', [ReservaController::class, 'listarReservas'])->name('reserva.listar');
     Route::get('/detalle/{id}', [ReservaController::class, 'detalle'])->name('reserva.detalle');
 
     Route::get('/modificar', [ReservaController::class, 'formModificar'])->name('reserva.modificar.form');
