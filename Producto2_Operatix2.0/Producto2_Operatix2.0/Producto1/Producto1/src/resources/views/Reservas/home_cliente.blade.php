@@ -23,11 +23,12 @@
     @endif
 
     <ul class="panel-links">
-        <li><a href="{{ route('reserva.listar') }}">📋 Mis Reservas</a></li>
-        <li><a href="{{ route('reserva.crear.form') }}">✈️ Crear Nueva Reserva</a></li>
-        <li><a href="{{ route('cliente.editar') }}">👤 Editar Perfil</a></li>
-        <li><a href="{{ route('cliente.logout') }}">🚪 Cerrar sesión</a></li>
+    <li><a href="{{ route('reserva.listar') }}">📋 Mis Reservas</a></li>
+    <li><a href="{{ route('reserva.crear.form') }}">✈️ Crear Nueva Reserva</a></li>
+    <li><a href="{{ route('cliente.perfil') }}">👤 Editar Perfil</a></li>
+    <li><a href="{{ route('cliente.logout') }}">🚪 Cerrar sesión</a></li>
     </ul>
+
 </div>
 
 </body>

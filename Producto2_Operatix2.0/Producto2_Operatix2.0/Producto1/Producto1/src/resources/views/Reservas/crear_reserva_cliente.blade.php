@@ -1,58 +1,92 @@
-<?php
+@php use Illuminate\Support\Facades\Auth; @endphp
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Reserva</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+</head>
+<body>
 
-namespace App\Http\Controllers;
+    <div class="form-wrapper">
+        <div class="formulario-reserva">
+            <h2 class="titulo-reservas">Crear Nueva Reserva</h2>
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
-use App\Models\Hotel;
-use App\Models\Reserva;
+            {{-- Mensaje de éxito --}}
+            @if (session('success'))
+                <p class="success">{{ session('success') }}</p>
+            @endif
 
-class ReservaController extends Controller
-{
-    public function formCrear()
-    {
-        if (!Session::has('cliente_id')) {
-            return redirect('/cliente/login');
-        }
+            {{-- Errores de validación --}}
+            @if ($errors->any())
+                <div class="alert error">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>⚠️ {{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-        $tipo_cliente = Session::get('tipo_cliente', 'cliente');
-        $volver_url = $tipo_cliente === 'administrador' ? '/admin/home' : '/cliente/home';
+            <form action="{{ route('reserva.crear') }}" method="POST">
+                @csrf
 
-        $email = Session::get('email');
-        $hoteles = Hotel::all(); // Requiere modelo Hotel
+                <label for="id_tipo_reserva">Tipo de Trayecto:</label>
+                <select id="id_tipo_reserva" name="id_tipo_reserva" required>
+                    <option value="1">De Aeropuerto a Hotel</option>
+                    <option value="2">De Hotel a Aeropuerto</option>
+                    <option value="3">Ida y Vuelta</option>
+                </select>
 
-        return view('reserva.crear', compact('volver_url', 'email', 'hoteles'));
-    }
+                <label for="fecha_entrada">Fecha de Entrada:</label>
+                <input type="date" id="fecha_entrada" name="fecha_entrada" max="2099-12-31" required>
 
-    public function crear(Request $request)
-    {
-        $request->validate([
-            'id_tipo_reserva' => 'required|in:1,2,3',
-            'fecha_entrada' => 'required|date',
-            'hora_entrada' => 'required',
-            'num_viajeros' => 'required|integer|min:1',
-            'id_hotel' => 'required|exists:hoteles,id',
-            'numero_vuelo_entrada' => 'required|string',
-            'hora_vuelo_salida' => 'nullable',
-            'origen_vuelo_entrada' => 'nullable|string',
-            'email_cliente' => 'required|email',
-        ]);
+                <label for="hora_entrada">Hora de Entrada:</label>
+                <input type="time" id="hora_entrada" name="hora_entrada" required>
 
-        Reserva::create([
-            'id_tipo_reserva' => $request->id_tipo_reserva,
-            'fecha_entrada' => $request->fecha_entrada,
-            'hora_entrada' => $request->hora_entrada,
-            'num_viajeros' => $request->num_viajeros,
-            'id_hotel' => $request->id_hotel,
-            'numero_vuelo_entrada' => $request->numero_vuelo_entrada,
-            'hora_vuelo_salida' => $request->hora_vuelo_salida,
-            'origen_vuelo_entrada' => $request->origen_vuelo_entrada,
-            'email_cliente' => $request->email_cliente,
-            'id_destino' => 1,
-            'fecha_vuelo_salida' => now(),
-            'id_vehiculo' => 1,
-        ]);
+                <label for="num_viajeros">Número de Viajeros:</label>
+                <input type="number" id="num_viajeros" name="num_viajeros" min="1" required>
 
-        return redirect()->route('reserva.crear.form')->with('success', 'Reserva creada con éxito');
-    }
-}
+                <label for="precio">Precio del Servicio (€):</label>
+                <input type="number" id="precio" name="precio" step="0.01" min="0" required>
+
+                <label for="id_hotel">Hotel de Destino:</label>
+                <select id="id_hotel" name="id_hotel" required>
+                    @foreach ($hoteles as $hotel)
+                        <option value="{{ $hotel->id_hotel }}">{{ $hotel->usuario }}</option>
+                    @endforeach
+                </select>
+
+                <label for="numero_vuelo_entrada">Número de Vuelo:</label>
+                <input type="text" id="numero_vuelo_entrada" name="numero_vuelo_entrada" required>
+
+                <label for="hora_vuelo_salida">Hora del Vuelo:</label>
+                <input type="time" id="hora_vuelo_salida" name="hora_vuelo_salida">
+
+                <label for="origen_vuelo_entrada">Origen del Vuelo:</label>
+                <input type="text" id="origen_vuelo_entrada" name="origen_vuelo_entrada">
+
+                {{-- Correo del cliente autenticado --}}
+                @if (Auth::check())
+                    <input type="hidden" name="email_cliente" value="{{ Auth::user()->email }}">
+                @else
+                    <p class="alert error">⚠️ No estás autenticado. Por favor vuelve a iniciar sesión.</p>
+                @endif
+
+                {{-- Campos ocultos --}}
+                <input type="hidden" name="id_destino" value="1">
+                <input type="hidden" name="fecha_vuelo_salida" value="{{ now()->format('Y-m-d') }}">
+                <input type="hidden" name="id_vehiculo" value="1">
+
+                <button type="submit">Crear Reserva</button>
+            </form>
+
+            <div class="volver-menu">
+                <a href="{{ route('cliente.home') }}">← Volver al Panel</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
