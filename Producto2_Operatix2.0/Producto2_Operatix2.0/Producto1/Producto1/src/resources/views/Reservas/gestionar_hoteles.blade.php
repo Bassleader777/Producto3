@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <style>
-        /* Estilos embebidos del original */
         .gestion-hoteles-container {
             background: #e8fbe5;
             padding: 40px;
@@ -106,7 +105,7 @@
                 <tr>
                     <td>{{ $hotel->id_hotel }}</td>
                     <td>{{ $hotel->id_zona }}</td>
-                    <td>{{ $hotel->comision }}%</td>
+                    <td>{{ $hotel->Comision }}%</td>
                     <td>{{ $hotel->usuario }}</td>
                     <td>
                         <a href="{{ url('/admin/hoteles/editar?id=' . $hotel->id_hotel) }}">Editar</a> |

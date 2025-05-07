@@ -20,9 +20,9 @@
         <label for="id_zona">Zona:</label>
         <select name="id_zona" id="id_zona" required>
             @foreach ($zonas as $zona)
-                <option value="{{ $zona['id_zona'] }}"
-                    {{ $zona['id_zona'] == $hotel->id_zona ? 'selected' : '' }}>
-                    {{ $zona['nombre_zona'] }}
+                <option value="{{ $zona->id_zona }}"
+                    {{ $zona->id_zona == $hotel->id_zona ? 'selected' : '' }}>
+                    {{ $zona->nombre_zona }}
                 </option>
             @endforeach
         </select>

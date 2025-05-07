@@ -130,18 +130,21 @@ class HotelController extends Controller
 {
     $id_hotel = $request->query('id');
 
-    $hotel = \App\Models\Hotel::find($id_hotel);
+    $hotel = Hotel::find($id_hotel);
 
     if (!$hotel) {
         return redirect()->route('admin.hoteles')->with('error', '❌ Hotel no encontrado.');
     }
 
-    // Si aún no tienes un modelo de Zona, usamos DB::table
-    $zonas = DB::table('transfer_zona')->get();
+    // Ahora usamos el modelo Zona correctamente
+    $zonas = Zona::all();
 
     return view('Reservas.editar_hotel', compact('hotel', 'zonas'));
 }
-    public function crearHotel()
+    
+
+
+public function crearHotel()
     {
     // Obtener las zonas para mostrarlas en el formulario
     $zonas = Zona::all();
