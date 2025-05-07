@@ -68,9 +68,10 @@ Route::prefix('reserva')->middleware('auth')->group(function () {
 });
 
     // === ADMINISTRACIÓN ===
-Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/home', fn() => view('Admin.home_admin'))->name('admin.home');
-    Route::get('/reportes', fn() => view('Admin.reportes_actividad'))->name('admin.reportes');
+    Route::get('/reportes', [AdminController::class, 'verReportesActividad'])->name('admin.reportes');
+
 
     // Gestión de USUARIOS
     Route::get('/usuarios', [AdminController::class, 'obtenerTodosLosUsuarios'])->name('admin.usuarios');

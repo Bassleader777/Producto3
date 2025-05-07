@@ -16,8 +16,8 @@
         <li><strong>Total de hoteles registrados:</strong> {{ $totalHoteles ?? 0 }}</li>
         <li>
             <strong>Zona más reservada:</strong>
-            @if(isset($zonaMasReservada['nombre_zona']))
-                {{ $zonaMasReservada['nombre_zona'] }} ({{ $zonaMasReservada['total'] }} reservas)
+            @if(isset($zonaMasReservada->nombre_zona))
+                {{ $zonaMasReservada->nombre_zona }} ({{ $zonaMasReservada->total }} reservas)
             @else
                 N/D (0 reservas)
             @endif
@@ -38,11 +38,11 @@
         <tbody>
             @foreach ($ultimasReservas as $reserva)
                 <tr>
-                    <td>{{ $reserva['id_reserva'] }}</td>
-                    <td>{{ $reserva['email_cliente'] }}</td>
-                    <td>{{ $reserva['origen_vuelo_entrada'] ?? 'N/D' }}</td>
-                    <td>{{ $reserva['nombre_zona'] ?? 'N/D' }}</td>
-                    <td>{{ $reserva['fecha_reserva'] }}</td>
+                    <td>{{ $reserva->id_reserva }}</td>
+                    <td>{{ $reserva->email_cliente }}</td>
+                    <td>{{ $reserva->origen_vuelo_entrada ?? 'N/D' }}</td>
+                    <td>{{ $reserva->nombre_zona ?? 'N/D' }}</td>
+                    <td>{{ $reserva->fecha_reserva }}</td>
                 </tr>
             @endforeach
         </tbody>
@@ -61,10 +61,10 @@
         <tbody>
             @foreach ($ultimosHoteles as $hotel)
                 <tr>
-                    <td>{{ $hotel['id_hotel'] }}</td>
-                    <td>{{ $hotel['nombre_zona'] ?? $hotel['id_zona'] }}</td>
-                    <td>{{ $hotel['Comision'] }}</td>
-                    <td>{{ $hotel['usuario'] }}</td>
+                    <td>{{ $hotel->id_hotel }}</td>
+                    <td>{{ $hotel->nombre_zona ?? $hotel->id_zona }}</td>
+                    <td>{{ $hotel->Comision }}</td>
+                    <td>{{ $hotel->usuario }}</td>
                 </tr>
             @endforeach
         </tbody>
@@ -81,8 +81,8 @@
         <tbody>
             @foreach ($reservasPorDia as $fila)
                 <tr>
-                    <td>{{ $fila['fecha'] }}</td>
-                    <td>{{ $fila['total'] }}</td>
+                    <td>{{ $fila->fecha }}</td>
+                    <td>{{ $fila->total }}</td>
                 </tr>
             @endforeach
         </tbody>

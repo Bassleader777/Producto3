@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use App\Models\Cliente;
 use App\Models\Hotel;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Reserva;
 
 class AdminController extends Controller
 {
@@ -93,8 +95,70 @@ class AdminController extends Controller
     {
         $hoteles = Hotel::all();
         return view('Reservas.gestionar_hoteles', compact('hoteles'));
-
     }
 
-    
+    // Mostrar los reportes de actividad
+public function verReportesActividad()
+{
+    // Total de reservas
+    $totalReservas = Reserva::count();
+
+    // Total de hoteles
+    $totalHoteles = Hotel::count();
+
+    // Zona más reservada (JOIN con zonas)
+    $zonaMasReservada = DB::table('transfer_reservas')
+        ->join('transfer_zona', 'transfer_reservas.id_destino', '=', 'transfer_zona.id_zona')
+        ->select('transfer_zona.nombre_zona', DB::raw('count(*) as total'))
+        ->groupBy('transfer_zona.nombre_zona')
+        ->orderByDesc('total')
+        ->first();
+
+    // Últimas reservas (con nombre de zona)
+    $ultimasReservas = DB::table('transfer_reservas')
+        ->join('transfer_zona', 'transfer_reservas.id_destino', '=', 'transfer_zona.id_zona')
+        ->select(
+            'transfer_reservas.id_reserva',
+            'transfer_reservas.email_cliente',
+            'transfer_reservas.origen_vuelo_entrada',
+            'transfer_zona.nombre_zona',
+            'transfer_reservas.fecha_reserva'
+        )
+        ->orderByDesc('transfer_reservas.fecha_reserva')
+        ->take(5)
+        ->get();
+
+    // Últimos hoteles (con nombre de zona) — tabla corregida
+    $ultimosHoteles = DB::table('tranfer_hotel')
+        ->join('transfer_zona', 'tranfer_hotel.id_zona', '=', 'transfer_zona.id_zona')
+        ->select(
+            'tranfer_hotel.id_hotel',
+            'transfer_zona.nombre_zona',
+            'tranfer_hotel.Comision',
+            'tranfer_hotel.usuario'
+        )
+        ->orderByDesc('tranfer_hotel.id_hotel')
+        ->take(5)
+        ->get();
+
+    // Reservas por día (últimos 7 días)
+    $reservasPorDia = Reserva::select(
+            DB::raw('DATE(fecha_reserva) as fecha'),
+            DB::raw('count(*) as total')
+        )
+        ->whereBetween('fecha_reserva', [now()->subDays(7), now()])
+        ->groupBy(DB::raw('DATE(fecha_reserva)'))
+        ->orderByDesc('fecha')
+        ->get();
+
+    return view('Admin.reportes_actividad', compact(
+        'totalReservas',
+        'totalHoteles',
+        'zonaMasReservada',
+        'ultimasReservas',
+        'ultimosHoteles',
+        'reservasPorDia'
+    ));
+}
+
 }
