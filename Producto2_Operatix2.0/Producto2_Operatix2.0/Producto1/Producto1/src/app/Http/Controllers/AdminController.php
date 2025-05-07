@@ -86,4 +86,12 @@ class AdminController extends Controller
 
         return view('Admin.calendario_reservas_admin', compact('reservasPorDia', 'year', 'month'));
     }
+
+    //Gestionar hoteles
+    public function gestionarHoteles()
+        {
+        $hoteles = \App\Models\Hotel::all();
+        return view('Admin.gestionar_hoteles', compact('hoteles'));
+        }
+
 }

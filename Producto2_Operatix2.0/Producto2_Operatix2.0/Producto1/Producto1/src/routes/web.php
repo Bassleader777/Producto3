@@ -78,7 +78,11 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/usuarios/{id}/actualizar', [AdminController::class, 'actualizarUsuario'])->name('admin.usuarios.actualizar');
     Route::get('/usuarios/{id}/eliminar', [AdminController::class, 'eliminarUsuario'])->name('admin.usuarios.eliminar');
 
+    // Gestión de hoteles (RUTA CORRECTA AÑADIDA)
+    Route::get('/hoteles', [AdminController::class, 'gestionarHoteles'])->name('admin.hoteles');
+
     // Gestión de reservas
     Route::get('/reservas/calendario', fn() => view('Admin.calendario_reservas_admin'))->name('admin.reservas.calendario');
     Route::get('/reservas/crear', fn() => view('Admin.crear_reserva_admin'))->name('admin.reservas.crear');
 });
+
