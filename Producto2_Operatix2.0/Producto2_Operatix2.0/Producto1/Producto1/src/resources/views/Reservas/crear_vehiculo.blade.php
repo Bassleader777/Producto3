@@ -12,9 +12,7 @@
         @csrf
 
         <h2>Añadir nuevo vehículo</h2>
-
-        <label for="id_vehiculo">ID del Vehículo:</label>
-        <input type="text" name="id_vehiculo" id="id_vehiculo" required>
+        
 
         <label for="description">Descripción del vehículo:</label>
         <input type="text" name="description" id="description" required>
@@ -28,7 +26,7 @@
         <button type="submit">Añadir Vehículo</button>
 
         <div class="volver-menu">
-            <a href="{{ route('admin.vehiculos.index') }}">← Volver a la gestión de vehículos</a>
+            <a href="{{ route('vehiculo.listar') }}">← Volver a la gestión de vehículos</a>
         </div>
     </form>
 

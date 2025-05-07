@@ -88,7 +88,7 @@
 <div class="gestion-hoteles-container">
     <h1>Gestión de Hoteles</h1>
 
-    <p><a href="{{ url('/admin/hoteles/crear') }}">+ Añadir nuevo hotel</a></p>
+    <p><a href="{{ route('hoteles.create') }}">+ Añadir nuevo hotel</a></p>
 
     <table>
         <thead>
@@ -108,8 +108,8 @@
                     <td>{{ $hotel->Comision }}%</td>
                     <td>{{ $hotel->usuario }}</td>
                     <td>
-                        <a href="{{ url('/admin/hoteles/editar?id=' . $hotel->id_hotel) }}">Editar</a> |
-                        <a href="{{ url('/admin/hoteles/eliminar?id=' . $hotel->id_hotel) }}"
+                        <a href="{{ route('admin.hoteles.editar', ['id' => $hotel->id_hotel]) }}">Editar</a> |
+                        <a href="{{ route('hotel.eliminar', ['id_hotel' => $hotel->id_hotel]) }}"
                            onclick="return confirm('¿Estás seguro de eliminar este hotel?')">Eliminar</a>
                     </td>
                 </tr>

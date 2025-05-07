@@ -72,13 +72,13 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/home', fn() => view('Admin.home_admin'))->name('admin.home');
     Route::get('/reportes', fn() => view('Admin.reportes_actividad'))->name('admin.reportes');
 
-    // Gestión de usuarios
+    // Gestión de USUARIOS
     Route::get('/usuarios', [AdminController::class, 'obtenerTodosLosUsuarios'])->name('admin.usuarios');
     Route::get('/usuarios/{id}/editar', [AdminController::class, 'editarUsuario'])->name('admin.usuarios.editar');
     Route::post('/usuarios/{id}/actualizar', [AdminController::class, 'actualizarUsuario'])->name('admin.usuarios.actualizar');
     Route::get('/usuarios/{id}/eliminar', [AdminController::class, 'eliminarUsuario'])->name('admin.usuarios.eliminar');
 
-    // ✅ Gestión de hoteles (corregido sin duplicar '/admin')
+    // ✅ Gestión de HOTELES (corregido sin duplicar '/admin')
     Route::get('/hoteles', [AdminController::class, 'gestionarHoteles'])->name('admin.hoteles');
     Route::get('/hoteles/editar', [HotelController::class, 'formEditar'])->name('admin.hoteles.editar');
     Route::put('/hoteles/{id_hotel}/actualizar', [HotelController::class, 'actualizarHotel'])->name('hotel.actualizar');
@@ -86,10 +86,31 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/hoteles', [HotelController::class, 'registrarHotel'])->name('hoteles.store');
     // Ruta para mostrar el formulario de añadir nuevo hotel
     Route::get('/hoteles/crear', [HotelController::class, 'crearHotel'])->name('hoteles.create');
+    // Ruta para eliminar un hotel
+    Route::get('/hoteles/eliminar/{id_hotel}', [HotelController::class, 'eliminarHotel'])->name('hotel.eliminar');
+
+    // Gestión de VEHICULOS
+    // Mostrar todos los vehículos
+    Route::get('/vehiculos', [VehiculoController::class, 'listarVehiculos'])->name('vehiculo.listar');
+
+    // Mostrar formulario de edición con ?id=...
+    Route::get('/vehiculos/editar', [VehiculoController::class, 'formEditarVehiculo'])->name('admin.vehiculos.editar');
+
+    // Actualizar un vehículo (requiere campo hidden con id en el form)
+    Route::post('/vehiculos/actualizar', [VehiculoController::class, 'actualizarVehiculo'])->name('admin.vehiculos.actualizar');
+
+    // Eliminar vehículo (mediante ?id=...)
+    Route::get('/vehiculos/eliminar', [VehiculoController::class, 'eliminarVehiculo'])->name('admin.vehiculos.eliminar');
+
+    // Mostrar formulario para crear vehículo
+    Route::get('/vehiculos/crear', fn() => view('Reservas.crear_vehiculo'))->name('admin.vehiculos.crear.form');
+
+    // Procesar formulario de creación
+    Route::post('/vehiculos/crear', [VehiculoController::class, 'crearVehiculo'])->name('admin.vehiculos.crear');
 
 
 
-    // Gestión de reservas
+    // Gestión de RESERVAS
     Route::get('/reservas/calendario', fn() => view('Admin.calendario_reservas_admin'))->name('admin.reservas.calendario');
     Route::get('/reservas/crear', fn() => view('Admin.crear_reserva_admin'))->name('admin.reservas.crear');
 });
