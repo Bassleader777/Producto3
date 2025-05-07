@@ -1,57 +1,97 @@
-<?php
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reportes de Actividad</title>
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+</head>
+<body>
 
-namespace App\Http\Controllers;
+<div class="reportes-container">
+    <h1 class="titulo-reporte">📊 Reportes de Actividad</h1>
 
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
+    <h2>Resumen</h2>
+    <ul>
+        <li><strong>Total de reservas:</strong> {{ $totalReservas ?? 0 }}</li>
+        <li><strong>Total de hoteles registrados:</strong> {{ $totalHoteles ?? 0 }}</li>
+        <li>
+            <strong>Zona más reservada:</strong>
+            @if(isset($zonaMasReservada['nombre_zona']))
+                {{ $zonaMasReservada['nombre_zona'] }} ({{ $zonaMasReservada['total'] }} reservas)
+            @else
+                N/D (0 reservas)
+            @endif
+        </li>
+    </ul>
 
-class ReporteController extends Controller
-{
-    public function index()
-    {
-        // Verificación de acceso
-        if (Session::get('tipo_cliente') !== 'administrador') {
-            return redirect('/cliente/login');
-        }
+    <h2>Últimas Reservas</h2>
+    <table class="tabla-estilizada">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Email Cliente</th>
+                <th>Origen</th>
+                <th>Destino</th>
+                <th>Fecha Reserva</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($ultimasReservas as $reserva)
+                <tr>
+                    <td>{{ $reserva['id_reserva'] }}</td>
+                    <td>{{ $reserva['email_cliente'] }}</td>
+                    <td>{{ $reserva['origen_vuelo_entrada'] ?? 'N/D' }}</td>
+                    <td>{{ $reserva['nombre_zona'] ?? 'N/D' }}</td>
+                    <td>{{ $reserva['fecha_reserva'] }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 
-        // Ejemplos de consultas simuladas
-        $totalReservas = DB::table('reservas')->count();
-        $totalHoteles = DB::table('hoteles')->count();
+    <h2>Últimos Hoteles Registrados</h2>
+    <table class="tabla-estilizada">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Zona</th>
+                <th>Comisión</th>
+                <th>Usuario</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($ultimosHoteles as $hotel)
+                <tr>
+                    <td>{{ $hotel['id_hotel'] }}</td>
+                    <td>{{ $hotel['nombre_zona'] ?? $hotel['id_zona'] }}</td>
+                    <td>{{ $hotel['Comision'] }}</td>
+                    <td>{{ $hotel['usuario'] }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 
-        $zonaMasReservada = DB::table('reservas')
-            ->select('zonas.nombre_zona', DB::raw('count(*) as total'))
-            ->join('hoteles', 'reservas.id_hotel', '=', 'hoteles.id_hotel')
-            ->join('zonas', 'hoteles.id_zona', '=', 'zonas.id_zona')
-            ->groupBy('zonas.nombre_zona')
-            ->orderByDesc('total')
-            ->first();
+    <h2>Reservas por Día (7 últimos días)</h2>
+    <table class="tabla-estilizada">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Total de Reservas</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($reservasPorDia as $fila)
+                <tr>
+                    <td>{{ $fila['fecha'] }}</td>
+                    <td>{{ $fila['total'] }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 
-        $ultimasReservas = DB::table('reservas')
-            ->orderByDesc('fecha_reserva')
-            ->take(10)
-            ->get();
+    <div class="volver-menu">
+        <a href="{{ url('/admin/home') }}">← Volver al Panel de Administración</a>
+    </div>
+</div>
 
-        $ultimosHoteles = DB::table('hoteles')
-            ->join('zonas', 'hoteles.id_zona', '=', 'zonas.id_zona')
-            ->orderByDesc('hoteles.created_at')
-            ->take(10)
-            ->get();
-
-        $reservasPorDia = DB::table('reservas')
-            ->select(DB::raw('DATE(fecha_reserva) as fecha'), DB::raw('COUNT(*) as total'))
-            ->where('fecha_reserva', '>=', now()->subDays(7))
-            ->groupBy('fecha')
-            ->orderBy('fecha', 'desc')
-            ->get();
-
-        return view('admin.reportes.index', compact(
-            'totalReservas',
-            'totalHoteles',
-            'zonaMasReservada',
-            'ultimasReservas',
-            'ultimosHoteles',
-            'reservasPorDia'
-        ));
-    }
-}
+</body>
+</html>
