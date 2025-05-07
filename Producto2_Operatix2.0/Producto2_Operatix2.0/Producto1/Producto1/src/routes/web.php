@@ -82,6 +82,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/hoteles', [AdminController::class, 'gestionarHoteles'])->name('admin.hoteles');
     Route::get('/hoteles/editar', [HotelController::class, 'formEditar'])->name('admin.hoteles.editar');
     Route::put('/hoteles/{id_hotel}/actualizar', [HotelController::class, 'actualizarHotel'])->name('hotel.actualizar');
+    // Ruta para procesar el formulario de creación de hotel
+    Route::post('/hoteles', [HotelController::class, 'registrarHotel'])->name('hoteles.store');
+    // Ruta para mostrar el formulario de añadir nuevo hotel
+    Route::get('/hoteles/crear', [HotelController::class, 'crearHotel'])->name('hoteles.create');
+
+
 
     // Gestión de reservas
     Route::get('/reservas/calendario', fn() => view('Admin.calendario_reservas_admin'))->name('admin.reservas.calendario');

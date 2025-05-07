@@ -141,6 +141,13 @@ class HotelController extends Controller
 
     return view('Reservas.editar_hotel', compact('hotel', 'zonas'));
 }
-
+    public function crearHotel()
+    {
+    // Obtener las zonas para mostrarlas en el formulario
+    $zonas = Zona::all();
+    
+    // Devolver la vista con las zonas
+    return view('Reservas.crear_hotel', compact('zonas'));
+    }
 
 }
