@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cliente;
+use App\Models\Hotel;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
@@ -43,7 +44,7 @@ class AdminController extends Controller
         }
 
         $usuario->nombre = $request->nombre;
-        $usuario->email = $request->email;
+        $usuario->email  = $request->email;
 
         if ($request->filled('password')) {
             $usuario->password = Hash::make($request->password);
@@ -87,11 +88,11 @@ class AdminController extends Controller
         return view('Admin.calendario_reservas_admin', compact('reservasPorDia', 'year', 'month'));
     }
 
-    //Gestionar hoteles
+    // Gestión de hoteles
     public function gestionarHoteles()
-        {
-        $hoteles = \App\Models\Hotel::all();
-        return view('Admin.gestionar_hoteles', compact('hoteles'));
-        }
+    {
+        $hoteles = Hotel::all();
+        return view('Reservas.gestionar_hoteles', compact('hoteles'));
 
+    }
 }

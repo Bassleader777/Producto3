@@ -67,8 +67,8 @@ Route::prefix('reserva')->middleware('auth')->group(function () {
     Route::get('/modificar/cliente', fn() => view('Reservas.modificar_Reserva'))->name('reserva.modificar.cliente');
 });
 
-// === ADMINISTRACIÓN ===
-Route::prefix('admin')->middleware('auth')->group(function () {
+    // === ADMINISTRACIÓN ===
+    Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/home', fn() => view('Admin.home_admin'))->name('admin.home');
     Route::get('/reportes', fn() => view('Admin.reportes_actividad'))->name('admin.reportes');
 
@@ -80,6 +80,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     // Gestión de hoteles (RUTA CORRECTA AÑADIDA)
     Route::get('/hoteles', [AdminController::class, 'gestionarHoteles'])->name('admin.hoteles');
+
+
+
 
     // Gestión de reservas
     Route::get('/reservas/calendario', fn() => view('Admin.calendario_reservas_admin'))->name('admin.reservas.calendario');
