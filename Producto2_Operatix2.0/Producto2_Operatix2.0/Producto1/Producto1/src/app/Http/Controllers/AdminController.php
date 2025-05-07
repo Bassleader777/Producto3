@@ -185,5 +185,19 @@ public function calendarioReservasAdmin(Request $request)
             'reservasPorDia'
         ));
     }
+    
+        public function formCrearReserva()
+    {
+        $hoteles = Hotel::all();
+        $volver_url = route('admin.home'); // 👈 ruta al panel del admin
+        return view('Admin.crear_reserva_admin', compact('hoteles', 'volver_url'));
+    }
+
+    //Listar reservas admin
+        public function listarReservas()
+    {
+        $reservas = Reserva::all();
+        return view('Admin.listar_reservas', compact('reservas'));
+    }
 
 }

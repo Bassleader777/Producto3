@@ -90,7 +90,12 @@ class ReservaController extends Controller
             $reserva->save();
            
 
-            return redirect()->route('reserva.listar')->with('success', 'Reserva creada con éxito.');
+            if (Auth::check() && Auth::user()->tipo_cliente === 'administrador') {
+                return redirect()->route('admin.reservas.listar')->with('success', 'Reserva creada con éxito.');
+            } else {
+                return redirect()->route('reserva.listar')->with('success', 'Reserva creada con éxito.');
+            }            
+            
         } catch (\Exception $e) {
             return back()->with('error', 'Error al crear la reserva: ' . $e->getMessage());
         }

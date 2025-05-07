@@ -43,9 +43,10 @@
 
         <label for="id_hotel">Hotel de Destino:</label>
         <select id="id_hotel" name="id_hotel" required>
-            @foreach ($hoteles as $hotel)
-                <option value="{{ $hotel->id_hotel }}">{{ $hotel->usuario }}</option>
-            @endforeach
+                @foreach ($hoteles as $hotel)
+                    <option value="{{ $hotel->id_hotel }}">{{ $hotel->nombre }}</option>
+                @endforeach
+
         </select>
 
         <label for="numero_vuelo_entrada">Número de Vuelo:</label>
@@ -57,15 +58,20 @@
         <label for="origen_vuelo_entrada">Origen del Vuelo:</label>
         <input type="text" id="origen_vuelo_entrada" name="origen_vuelo_entrada" value="{{ old('origen_vuelo_entrada') }}">
 
-        @if (isset($email))
-            <input type="hidden" name="email_cliente" value="{{ $email }}">
+        @php use Illuminate\Support\Facades\Auth; @endphp
+
+        @if (Auth::check())
+            <input type="hidden" name="email_cliente" value="{{ Auth::user()->email }}">
         @else
-            <p style="color:red;">⚠️ No hay correo en la sesión. Por favor vuelve a iniciar sesión.</p>
+            <p class="alert error">⚠️ No hay correo en la sesión. Por favor vuelve a iniciar sesión.</p>
         @endif
 
         <input type="hidden" name="id_destino" value="1">
         <input type="hidden" name="fecha_vuelo_salida" value="{{ now()->format('Y-m-d') }}">
         <input type="hidden" name="id_vehiculo" value="1">
+
+        <label for="precio">Precio (€):</label>
+        <input type="number" id="precio" name="precio" step="0.01" value="{{ old('precio') }}" required>
 
         <button type="submit" name="submit">Crear Reserva</button>
     </form>

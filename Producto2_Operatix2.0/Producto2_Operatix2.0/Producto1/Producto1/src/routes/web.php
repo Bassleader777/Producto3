@@ -115,8 +115,11 @@ Route::prefix('reserva')->middleware('auth')->group(function () {
 
 
     // Gestión de RESERVAS
-    Route::get('/reservas/calendario', fn() => view('Admin.calendario_reservas_admin'))->name('admin.reservas.calendario');
-    Route::get('/reservas/crear', fn() => view('Admin.crear_reserva_admin'))->name('admin.reservas.crear');
+    Route::get('/reservas/calendario', [AdminController::class, 'calendarioReservasAdmin'])->name('admin.reservas.calendario');
+    Route::get('/reservas/crear', [AdminController::class, 'formCrearReserva'])->name('admin.reservas.crear');
+    Route::get('/reservas', [AdminController::class, 'listarReservas'])->name('admin.reservas.listar');
+
+
 });
 
 
