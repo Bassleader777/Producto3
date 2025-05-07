@@ -95,4 +95,6 @@ class AdminController extends Controller
         return view('Reservas.gestionar_hoteles', compact('hoteles'));
 
     }
+
+    
 }

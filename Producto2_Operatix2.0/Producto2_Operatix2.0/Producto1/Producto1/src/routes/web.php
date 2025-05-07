@@ -68,7 +68,7 @@ Route::prefix('reserva')->middleware('auth')->group(function () {
 });
 
     // === ADMINISTRACIÓN ===
-    Route::prefix('admin')->middleware('auth')->group(function () {
+Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/home', fn() => view('Admin.home_admin'))->name('admin.home');
     Route::get('/reportes', fn() => view('Admin.reportes_actividad'))->name('admin.reportes');
 
@@ -78,14 +78,14 @@ Route::prefix('reserva')->middleware('auth')->group(function () {
     Route::post('/usuarios/{id}/actualizar', [AdminController::class, 'actualizarUsuario'])->name('admin.usuarios.actualizar');
     Route::get('/usuarios/{id}/eliminar', [AdminController::class, 'eliminarUsuario'])->name('admin.usuarios.eliminar');
 
-    // Gestión de hoteles (RUTA CORRECTA AÑADIDA)
+    // ✅ Gestión de hoteles (corregido sin duplicar '/admin')
     Route::get('/hoteles', [AdminController::class, 'gestionarHoteles'])->name('admin.hoteles');
-
-
-
+    Route::get('/hoteles/editar', [HotelController::class, 'formEditar'])->name('admin.hoteles.editar');
+    Route::put('/hoteles/{id_hotel}/actualizar', [HotelController::class, 'actualizarHotel'])->name('hotel.actualizar');
 
     // Gestión de reservas
     Route::get('/reservas/calendario', fn() => view('Admin.calendario_reservas_admin'))->name('admin.reservas.calendario');
     Route::get('/reservas/crear', fn() => view('Admin.crear_reserva_admin'))->name('admin.reservas.crear');
 });
+
 

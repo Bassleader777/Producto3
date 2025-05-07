@@ -7,6 +7,7 @@ use App\Models\Zona; // Asumiendo que tienes el modelo Zona
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class HotelController extends Controller
 {
@@ -124,4 +125,22 @@ class HotelController extends Controller
             return redirect()->route('admin.hoteles')->with('error', '❌ No se encontró el hotel.');
         }
     }
+
+    public function formEditar(Request $request)
+{
+    $id_hotel = $request->query('id');
+
+    $hotel = \App\Models\Hotel::find($id_hotel);
+
+    if (!$hotel) {
+        return redirect()->route('admin.hoteles')->with('error', '❌ Hotel no encontrado.');
+    }
+
+    // Si aún no tienes un modelo de Zona, usamos DB::table
+    $zonas = DB::table('transfer_zona')->get();
+
+    return view('Reservas.editar_hotel', compact('hotel', 'zonas'));
+}
+
+
 }
