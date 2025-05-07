@@ -1,46 +1,47 @@
-<?php
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Hotel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+</head>
+<body>
 
-namespace App\Http\Controllers;
+    @if(session('mensaje'))
+        <p style="color:green">{{ session('mensaje') }}</p>
+    @elseif(session('error'))
+        <p style="color:red">{{ session('error') }}</p>
+    @endif
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Hash;
-use App\Models\Hotel;
-use App\Models\Zona;
+    <form action="{{ route('admin.hoteles.crear') }}" method="POST">
+        @csrf
+        <h2>Registrar Nuevo Hotel</h2>
 
-class HotelController extends Controller
-{
-    public function formCrear()
-    {
-        if (Session::get('tipo_cliente') !== 'administrador') {
-            return redirect('/cliente/login');
-        }
+        <label for="id_zona">Zona:</label>
+        <select name="id_zona" id="id_zona" required>
+            <option value="">Seleccione una zona</option>
+            @foreach($zonas as $zona)
+                <option value="{{ $zona->id_zona }}">{{ $zona->nombre_zona }}</option>
+            @endforeach
+        </select>
+        <br><br>
 
-        $zonas = Zona::all(); // Asume que tienes un modelo Zona
+        <label for="comision">Comisión (%):</label>
+        <input type="text" name="comision" id="comision" required><br><br>
 
-        return view('admin.hoteles.crear', compact('zonas'));
-    }
+        <label for="usuario">Usuario:</label>
+        <input type="text" name="usuario" id="usuario" required><br><br>
 
-    public function crear(Request $request)
-    {
-        $request->validate([
-            'id_zona' => 'required|exists:zonas,id',
-            'comision' => 'required|numeric|min:0|max:100',
-            'usuario' => 'required|string|max:255|unique:hoteles,usuario',
-            'password' => 'required|string|min:6',
-        ]);
+        <label for="password">Contraseña:</label>
+        <input type="password" name="password" id="password" required><br><br>
 
-        try {
-            Hotel::create([
-                'id_zona' => $request->id_zona,
-                'comision' => $request->comision,
-                'usuario' => $request->usuario,
-                'password' => Hash::make($request->password)
-            ]);
+        <button type="submit">Registrar Hotel</button>
 
-            return redirect()->route('hoteles.crear.form')->with('mensaje', '✅ Hotel registrado correctamente.');
-        } catch (\Exception $e) {
-            return back()->withInput()->with('error', '❌ Error al registrar el hotel.');
-        }
-    }
-}
+        <div class="volver-menu">
+            <a href="{{ route('admin.hoteles.index') }}">← Volver a la gestión de hoteles</a>
+        </div>
+    </form>
+
+</body>
+</html>
