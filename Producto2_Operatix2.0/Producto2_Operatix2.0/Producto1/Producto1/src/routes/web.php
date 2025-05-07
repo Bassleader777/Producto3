@@ -57,6 +57,7 @@ Route::prefix('reserva')->middleware('auth')->group(function () {
 
     Route::get('/calendario', [ReservaController::class, 'mostrarCalendario'])->name('reserva.calendario');
 
+
     Route::get('/gestionar/hoteles', fn() => view('Reservas.gestionar_hoteles'))->name('reserva.hoteles.gestionar');
     Route::get('/gestionar/vehiculos', fn() => view('Reservas.gestionar_vehiculos'))->name('reserva.vehiculos.gestionar');
 
@@ -71,6 +72,8 @@ Route::prefix('reserva')->middleware('auth')->group(function () {
     Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/home', fn() => view('Admin.home_admin'))->name('admin.home');
     Route::get('/reportes', [AdminController::class, 'verReportesActividad'])->name('admin.reportes');
+    Route::get('/reservas/calendario', [AdminController::class, 'calendarioReservasAdmin'])->name('admin.reservas.calendario');
+
 
 
     // Gestión de USUARIOS

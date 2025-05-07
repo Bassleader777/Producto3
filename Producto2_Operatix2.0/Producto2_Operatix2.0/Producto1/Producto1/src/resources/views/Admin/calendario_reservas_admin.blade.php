@@ -5,18 +5,15 @@
         ? route('admin.home')
         : route('cliente.home');
 
-    $reservasPorDia = [
-        '2025-04-01' => 1,
-        '2025-04-05' => 2,
-        '2025-04-10' => 3,
-        '2025-04-15' => 1,
-        '2025-04-20' => 2,
-        '2025-04-22' => 1,
-        '2025-04-30' => 2,
-    ];
+    // Navegación de mes actual
+    $monthName = ucfirst(\Carbon\Carbon::create()->month($month)->locale('es')->monthName);
 
-    $year = 2025;
-    $month = 4;
+    // Cálculos de mes anterior y siguiente
+    $prevMonth = $month == 1 ? 12 : $month - 1;
+    $prevYear = $month == 1 ? $year - 1 : $year;
+    $nextMonth = $month == 12 ? 1 : $month + 1;
+    $nextYear = $month == 12 ? $year + 1 : $year;
+
     $daysInMonth = date('t', strtotime("$year-$month-01"));
     $firstDayOfWeek = date('N', strtotime("$year-$month-01"));
 @endphp
@@ -31,7 +28,13 @@
 <body>
 
 <div class="calendario-container">
-    <h2 class="titulo-calendario">📅 Calendario de Reservas - Abril {{ $year }}</h2>
+    <h2 class="titulo-calendario">📅 Calendario de Reservas - {{ $monthName }} {{ $year }}</h2>
+
+    <div class="calendario-navegacion" style="margin-bottom: 15px;">
+        <a href="{{ route('admin.reservas.calendario', ['year' => $prevYear, 'month' => $prevMonth]) }}">← Mes anterior</a> |
+        <a href="{{ route('admin.reservas.calendario', ['year' => $nextYear, 'month' => $nextMonth]) }}">Mes siguiente →</a>
+    </div>
+
     <p>Como administrador, puedes ver las reservas de los usuarios en el calendario.</p>
 
     <table class="tabla-calendario">
@@ -48,16 +51,14 @@
         </thead>
         <tbody>
             <tr>
-                @php
-                    $cellCount = 1;
-                @endphp
+                @php $cellCount = 1; @endphp
 
-                {{-- Celdas vacías hasta el primer día del mes --}}
+                {{-- Celdas vacías antes del 1er día --}}
                 @for ($i = 1; $i < $firstDayOfWeek; $i++, $cellCount++)
                     <td></td>
                 @endfor
 
-                {{-- Días del mes con reservas --}}
+                {{-- Días del mes --}}
                 @for ($day = 1; $day <= $daysInMonth; $day++, $cellCount++)
                     @php
                         $fecha = sprintf('%04d-%02d-%02d', $year, $month, $day);
@@ -72,7 +73,7 @@
                     @endif
                 @endfor
 
-                {{-- Completar última fila si quedan celdas vacías --}}
+                {{-- Celdas vacías para completar fila final --}}
                 @while ($cellCount % 7 !== 1)
                     <td></td>
                     @php $cellCount++ @endphp
@@ -81,7 +82,7 @@
         </tbody>
     </table>
 
-    <div class="volver-menu">
+    <div class="volver-menu" style="margin-top: 20px;">
         <a href="{{ $volverUrl }}">&larr; Volver al Panel de Administración</a>
     </div>
 </div>

@@ -13,7 +13,7 @@
         <p>Desde este panel, el administrador puede gestionar todas las reservas, usuarios y otros aspectos del sistema.</p>
 
         <ul class="panel-links">
-            <li><a href="{{ url('/reserva/calendario') }}">📅 Ver Calendario de Reservas</a></li>
+            <li><a href="{{ route('admin.reservas.calendario') }}">📅 Ver Calendario de Reservas</a></li>
             <li><a href="{{ url('/admin/reservas/crear') }}">➕ Crear Nueva Reserva</a></li>
             <li><a href="{{ url('/admin/usuarios') }}">👥 Gestionar Usuarios</a></li>
             <li><a href="{{ url('/admin/hoteles') }}">🏨 Gestionar Hoteles</a></li>

@@ -11,7 +11,7 @@
     <h2>Calendario de Reservas</h2>
 
     <!-- Formularios para seleccionar día, semana o mes -->
-    <form action="{{ route('calendario.reservas') }}" method="GET">
+    <form action="{{ route('reserva.calendario') }}" method="GET">
         <label for="fecha_inicio">Fecha de inicio:</label>
         <input type="date" name="fecha_inicio" value="{{ old('fecha_inicio', $fecha_inicio ?? '') }}" required>
 

@@ -175,4 +175,28 @@ class ReservaController extends Controller
 
         return $zona ?: ['nombre_zona' => 'N/D', 'total' => 0];
     }
+
+
+    public function mostrarCalendario(Request $request)
+    {
+        $fecha_inicio = $request->input('fecha_inicio');
+        $fecha_fin = $request->input('fecha_fin');
+        $reservas = [];
+    
+        if ($fecha_inicio && $fecha_fin) {
+            $usuario = Auth::user();
+    
+            $reservas = Reserva::where('email_cliente', $usuario->email)
+                ->whereBetween('fecha_entrada', [$fecha_inicio, $fecha_fin])
+                ->get();
+        }
+    
+        return view('Reservas.calendario_reservas', [
+            'reservas' => $reservas,
+            'fecha_inicio' => $fecha_inicio,
+            'fecha_fin' => $fecha_fin,
+        ]);
+    }
+    
+
 }
