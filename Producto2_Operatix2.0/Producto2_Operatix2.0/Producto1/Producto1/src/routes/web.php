@@ -80,6 +80,14 @@ Route::prefix('reserva')->middleware('auth')->group(function () {
 
     // Gestión de hoteles (RUTA CORRECTA AÑADIDA)
     Route::get('/hoteles', [AdminController::class, 'gestionarHoteles'])->name('admin.hoteles');
+    Route::get('/hoteles/editar', [AdminController::class, 'formEditarHotel'])->name('admin.hoteles.editar');
+    // Ruta para mostrar el formulario de añadir nuevo hotel
+    Route::get('/hoteles/crear', [HotelController::class, 'crearHotel'])->name('admin.hoteles.create');
+    // Ruta para procesar el formulario de creación de hotel
+    Route::post('/admin/hoteles', [HotelController::class, 'registrarHotel'])->name('hoteles.store');
+
+
+
 
 
 

@@ -124,4 +124,15 @@ class HotelController extends Controller
             return redirect()->route('admin.hoteles')->with('error', '❌ No se encontró el hotel.');
         }
     }
+
+         // Mostrar el formulario para crear un nuevo hotel
+    public function crearHotel()
+    {
+        // Obtener las zonas para mostrarlas en el formulario
+        $zonas = Zona::all();
+    
+        // Devolver la vista con las zonas
+        return view('Reservas.crear_hotel', compact('zonas'));
+    }
+
 }
