@@ -25,45 +25,37 @@
             <button type="submit">Filtrar</button>
         </form>
 
-        <table>
+        <table class="styled-table">
             <thead>
                 <tr>
-                    <th>Hotel</th>
-                    <th>Total Reservas</th>
-                    <th>Comisión por Reserva</th>
-                    <th>Total Comisión</th>
+                    <th>🏨 Hotel</th>
+                    <th>📊 Total Reservas</th>
+                    <th>💸 Comisión por Reserva</th>
+                    <th>💰 Total Comisión</th>
                 </tr>
             </thead>
             <tbody>
-                @php
-                    $sumaTotal = 0;
-                @endphp
-
+                @php $totalGlobal = 0; @endphp
                 @forelse ($reservas as $r)
-                    @php
-                        $comision = (float) $r->total_comision;
-                        $sumaTotal += $comision;
-                    @endphp
                     <tr>
-                        <td>{{ $r->nombre_hotel }}</td>
+                        <td>{{ $r->nombre }}</td>
                         <td>{{ $r->total_reservas }}</td>
-                        <td>{{ number_format((float) $r->comision_unitaria, 2) }} €</td>
-                        <td><strong>{{ number_format($comision, 2) }} €</strong></td>
+                        <td>{{ number_format((float)$r->comision_unitaria, 2) }} €</td>
+                        <td><strong>{{ number_format((float)$r->total_comision, 2) }} €</strong></td>
+                        @php $totalGlobal += (float)$r->total_comision; @endphp
                     </tr>
                 @empty
                     <tr>
                         <td colspan="4">No hay datos para el periodo seleccionado.</td>
                     </tr>
                 @endforelse
-            </tbody>
-            @if ($reservas->count() > 0)
-                <tfoot>
-                    <tr>
-                        <td colspan="3"><strong>Total Global</strong></td>
-                        <td><strong>{{ number_format($sumaTotal, 2) }} €</strong></td>
+                @if(count($reservas))
+                    <tr style="font-weight: bold;">
+                        <td colspan="3" style="text-align: right;">Total Global</td>
+                        <td>{{ number_format($totalGlobal, 2) }} €</td>
                     </tr>
-                </tfoot>
-            @endif
+                @endif
+            </tbody>
         </table>
 
         <div class="volver-menu">

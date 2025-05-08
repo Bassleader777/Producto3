@@ -247,7 +247,6 @@ public function calendarioReservasAdmin(Request $request)
    }
 
 
-   //Método para ver el resumen de las comisiones
    public function verResumenComisiones(Request $request)
 {
     $mes = $request->input('mes', now()->format('m'));
@@ -256,18 +255,19 @@ public function calendarioReservasAdmin(Request $request)
     $reservas = DB::table('transfer_reservas')
         ->join('tranfer_hotel', 'transfer_reservas.id_hotel', '=', 'tranfer_hotel.id_hotel')
         ->select(
-            'tranfer_hotel.usuario as nombre_hotel',
+            'tranfer_hotel.nombre as nombre',
             DB::raw('COUNT(transfer_reservas.id_reserva) as total_reservas'),
-            DB::raw('tranfer_hotel.Comision as comision_unitaria'),
-            DB::raw('COUNT(transfer_reservas.id_reserva) * tranfer_hotel.Comision as total_comision')
+            DB::raw('REPLACE(tranfer_hotel.Comision, " euros", "") as comision_unitaria'),
+            DB::raw('COUNT(transfer_reservas.id_reserva) * REPLACE(tranfer_hotel.Comision, " euros", "") as total_comision')
         )
         ->whereMonth('transfer_reservas.fecha_reserva', '=', $mes)
         ->whereYear('transfer_reservas.fecha_reserva', '=', $anio)
-        ->groupBy('transfer_reservas.id_hotel', 'tranfer_hotel.usuario', 'tranfer_hotel.Comision')
+        ->groupBy('transfer_reservas.id_hotel', 'tranfer_hotel.nombre', 'tranfer_hotel.Comision')
         ->get();
 
     return view('Admin.resumen_comisiones', compact('reservas', 'mes', 'anio'));
 }
+
 
    
 
