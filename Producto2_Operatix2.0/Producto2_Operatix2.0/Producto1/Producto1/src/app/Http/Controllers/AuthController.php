@@ -44,12 +44,14 @@ class AuthController extends Controller
         switch ($cliente->tipo_cliente) {
             case 'administrador':
                 return redirect()->route('admin.home');
-            case 'particular':
             case 'corporativo':
+                return redirect()->route('hotel.home'); // Vista personalizada para corporativos
+            case 'particular':
                 return redirect()->route('cliente.home');
             default:
                 return redirect('/')->with('error', 'Tipo de cliente no reconocido.');
         }
+
     }
 
     // Cierra la sesión

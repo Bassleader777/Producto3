@@ -1,19 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Corporativo</title>
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+</head>
+<body>
 
-@section('title', 'Panel del Hotel')
-
-@section('content')
-    <h2>Bienvenido al Panel del Hotel</h2>
+<div class="panel-container"> {{-- Usa el mismo estilo que home_cliente --}}
+    <h2>Bienvenido al Panel Corporativo</h2>
     <p>Desde este panel, puedes gestionar las reservas de los clientes y ver la información relevante de tu hotel.</p>
 
-    <div class="menu">
-        <ul>
-            <li><a href="{{ url('/hotel/reservas') }}">Ver Reservas</a></li>
-            <li><a href="{{ url('/hotel/crear_reserva') }}">Realizar Nueva Reserva</a></li>
-            <li><a href="{{ url('/hotel/perfil') }}">Editar Perfil del Hotel</a></li>
-        </ul>
-    </div>
-
-    <p><a href="{{ url('/cliente/logout') }}">Cerrar sesión</a></p>
+    <ul class="panel-links">
+        <li><a href="{{ url('/hotel/reservas') }}">📋 Ver Reservas</a></li>
+        <li><a href="{{ url('/hotel/crear_reserva') }}">➕ Realizar Nueva Reserva</a></li>
+        <li><a href="{{ url('/hotel/perfil') }}">👤 Editar Perfil del Hotel</a></li>
+        <li><a href="{{ url('/cliente/logout') }}">🚪 Cerrar sesión</a></li>
+    </ul>
 
     <h3>Resumen de comisiones mensuales</h3>
     <ul>
@@ -25,4 +28,7 @@
             <li>No tienes comisiones registradas aún.</li>
         @endif
     </ul>
-@endsection
+</div>
+
+</body>
+</html>

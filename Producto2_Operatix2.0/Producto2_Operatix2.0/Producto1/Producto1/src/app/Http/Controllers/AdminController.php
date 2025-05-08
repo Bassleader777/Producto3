@@ -245,6 +245,30 @@ public function calendarioReservasAdmin(Request $request)
                ->with('error', '❌ Error al registrar el usuario corporativo: ' . $e->getMessage());
        }
    }
+
+
+   //Método para ver el resumen de las comisiones
+   public function verResumenComisiones(Request $request)
+{
+    $mes = $request->input('mes', now()->format('m'));
+    $anio = $request->input('anio', now()->format('Y'));
+
+    $reservas = DB::table('transfer_reservas')
+        ->join('tranfer_hotel', 'transfer_reservas.id_hotel', '=', 'tranfer_hotel.id_hotel')
+        ->select(
+            'tranfer_hotel.usuario as nombre_hotel',
+            DB::raw('COUNT(transfer_reservas.id_reserva) as total_reservas'),
+            DB::raw('tranfer_hotel.Comision as comision_unitaria'),
+            DB::raw('COUNT(transfer_reservas.id_reserva) * tranfer_hotel.Comision as total_comision')
+        )
+        ->whereMonth('transfer_reservas.fecha_reserva', '=', $mes)
+        ->whereYear('transfer_reservas.fecha_reserva', '=', $anio)
+        ->groupBy('transfer_reservas.id_hotel', 'tranfer_hotel.usuario', 'tranfer_hotel.Comision')
+        ->get();
+
+    return view('Admin.resumen_comisiones', compact('reservas', 'mes', 'anio'));
+}
+
    
 
 }
