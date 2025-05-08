@@ -135,6 +135,10 @@ Route::prefix('reserva')->middleware('auth')->group(function () {
     Route::get('/hotel/reservas', [HotelController::class, 'listarReservas'])->name('hotel.reservas');
     Route::get('/reservas', [HotelController::class, 'listarReservas'])->name('hotel.reservas');
 
+    //Home hotel
+    Route::get('/crear_reserva', [HotelController::class, 'formCrearReserva'])->name('hotel.reservas.crear');
+    Route::get('/perfil', [HotelController::class, 'editarPerfil'])->name('hotel.perfil');
+
     
 });
 

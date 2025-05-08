@@ -164,5 +164,11 @@ public function crearHotel()
     return view('Reservas.listar_reservas_hotel', compact('reservas'));
 }
 
+public function formCrearReserva()
+{
+    // Puedes pasar datos necesarios a la vista si los necesitas
+    return view('Reservas.crear_reserva_hotel');
+}
+
 
 }
