@@ -70,11 +70,12 @@ Route::prefix('reserva')->middleware('auth')->group(function () {
 
     // === ADMINISTRACIÓN ===
 
-    
     Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/home', fn() => view('Admin.home_admin'))->name('admin.home');
     Route::get('/reportes', [AdminController::class, 'verReportesActividad'])->name('admin.reportes');
     Route::get('/reservas/calendario', [AdminController::class, 'calendarioReservasAdmin'])->name('admin.reservas.calendario');
+    Route::get('/comisiones', [AdminController::class, 'verResumenComisiones']);
+
 
 
 
