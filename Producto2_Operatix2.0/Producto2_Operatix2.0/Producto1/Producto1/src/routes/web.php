@@ -131,12 +131,11 @@ Route::prefix('reserva')->middleware('auth')->group(function () {
     Route::get('/reservas/crear', [AdminController::class, 'formCrearReserva'])->name('admin.reservas.crear');
     Route::get('/reservas', [AdminController::class, 'listarReservas'])->name('admin.reservas.listar');
 
-       //Listar Hotel
-       Route::get('/hotel/reservas', [HotelController::class, 'listarReservas'])->name('hotel.reservas');
-       Route::get('/reservas', [HotelController::class, 'listarReservas'])->name('hotel.reservas');
+    //Listar Hotel
+    Route::get('/hotel/reservas', [HotelController::class, 'listarReservas'])->name('hotel.reservas');
+    Route::get('/reservas', [HotelController::class, 'listarReservas'])->name('hotel.reservas');
 
-    //REST SERVICE
-    Route::get('/reservas/zonas', [ApiController::class, 'reservasPorZona']);
+    
 });
 
 
