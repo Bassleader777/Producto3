@@ -12,11 +12,12 @@
     <p>Desde este panel, puedes gestionar las reservas de los clientes y ver la información relevante de tu hotel.</p>
 
     <ul class="panel-links">
-        <li><a href="{{ url('/hotel/reservas') }}">📋 Ver Reservas</a></li>
-        <li><a href="{{ url('/hotel/crear_reserva') }}">➕ Realizar Nueva Reserva</a></li>
-        <li><a href="{{ url('/hotel/perfil') }}">👤 Editar Perfil del Hotel</a></li>
-        <li><a href="{{ url('/cliente/logout') }}">🚪 Cerrar sesión</a></li>
+        <li><a href="{{ route('hotel.reservas') }}">📋 Ver Reservas</a></li>
+        <li><a href="{{ route('hotel.reservas.crear') }}">➕ Realizar Nueva Reserva</a></li>
+        <li><a href="{{ route('hotel.perfil') }}">👤 Editar Perfil del Hotel</a></li>
+        <li><a href="{{ route('cliente.logout') }}">🚪 Cerrar sesión</a></li>
     </ul>
+
 
     <h3>Resumen de comisiones mensuales</h3>
     <ul>

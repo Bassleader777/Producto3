@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class HotelController extends Controller
 {
@@ -152,5 +153,16 @@ public function crearHotel()
     // Devolver la vista con las zonas
     return view('Reservas.crear_hotel', compact('zonas'));
     }
+
+
+    public function listarReservas()
+    {
+    $hotel = Auth::user(); // El hotel está logueado
+
+    $reservas = \App\Models\Reserva::where('id_hotel', $hotel->id_hotel)->get();
+
+    return view('Reservas.listar_reservas_hotel', compact('reservas'));
+}
+
 
 }
