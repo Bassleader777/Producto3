@@ -10,38 +10,39 @@ use Illuminate\Support\Facades\Auth;
 
 class ClienteController extends Controller
 {
-    // REGISTRO DE NUEVO CLIENTE
-    public function registrarCliente(Request $request)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'apellido1' => 'required|string|max:255',
-            'direccion' => 'required|string',
-            'codigoPostal' => 'required|string|max:10',
-            'ciudad' => 'required|string|max:255',
-            'pais' => 'required|string|max:255',
-            'email' => 'required|email|unique:transfer_viajeros,email',
-            'password' => 'required|string|min:8|confirmed',
-            'tipo_cliente' => 'required|string'
-        ]);
+   // REGISTRO DE NUEVO CLIENTE
+public function registrarCliente(Request $request)
+{
+    $request->validate([
+        'nombre' => 'required|string|max:255',
+        'apellido1' => 'required|string|max:255',
+        'apellido2' => 'nullable|string|max:255',
+        'direccion' => 'required|string',
+        'codigoPostal' => 'required|string|max:10',
+        'ciudad' => 'required|string|max:255',
+        'pais' => 'required|string|max:255',
+        'email' => 'required|email|unique:transfer_viajeros,email',
+        'password' => 'required|string|min:8|confirmed'
+    ]);
 
-        $cliente = Cliente::create([
-            'nombre' => $request->nombre,
-            'apellido1' => $request->apellido1,
-            'apellido2' => $request->apellido2 ?? '',
-            'direccion' => $request->direccion,
-            'codigoPostal' => $request->codigoPostal,
-            'ciudad' => $request->ciudad,
-            'pais' => $request->pais,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'tipo_cliente' => $request->tipo_cliente,
-        ]);
+    $cliente = Cliente::create([
+        'nombre' => $request->nombre,
+        'apellido1' => $request->apellido1,
+        'apellido2' => $request->apellido2 ?? '',
+        'direccion' => $request->direccion,
+        'codigoPostal' => $request->codigoPostal,
+        'ciudad' => $request->ciudad,
+        'pais' => $request->pais,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'tipo_cliente' => 'particular' //  fijo para clientes públicos
+    ]);
 
-        Log::info('Nuevo cliente creado: ', ['cliente' => $cliente]);
+    \Log::info('Nuevo cliente registrado (público): ', ['cliente' => $cliente]);
 
-        return redirect()->route('login.form')->with('success', 'Cliente registrado con éxito. ¡Ahora puedes iniciar sesión!');
-    }
+    return redirect()->route('login.form')->with('success', 'Cliente registrado con éxito. ¡Ahora puedes iniciar sesión!');
+}
+
 
     // FORMULARIO DE REGISTRO
     public function formRegistro()

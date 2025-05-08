@@ -69,6 +69,8 @@ Route::prefix('reserva')->middleware('auth')->group(function () {
 });
 
     // === ADMINISTRACIÓN ===
+
+    
     Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/home', fn() => view('Admin.home_admin'))->name('admin.home');
     Route::get('/reportes', [AdminController::class, 'verReportesActividad'])->name('admin.reportes');
@@ -82,7 +84,14 @@ Route::prefix('reserva')->middleware('auth')->group(function () {
     Route::post('/usuarios/{id}/actualizar', [AdminController::class, 'actualizarUsuario'])->name('admin.usuarios.actualizar');
     Route::get('/usuarios/{id}/eliminar', [AdminController::class, 'eliminarUsuario'])->name('admin.usuarios.eliminar');
 
-    // ✅ Gestión de HOTELES (corregido sin duplicar '/admin')
+    // Registro de Usuarios Corporativos
+    Route::get('/corporativos/crear', [AdminController::class, 'showformRegistrarCorporativo'])->name('admin.corporativos.form');
+    Route::post('/corporativos/crear', [AdminController::class, 'registrarCorporativo'])->name('admin.corporativos.store');
+
+
+
+
+    // Gestión de HOTELES (corregido sin duplicar '/admin')
     Route::get('/hoteles', [AdminController::class, 'gestionarHoteles'])->name('admin.hoteles');
     Route::get('/hoteles/editar', [HotelController::class, 'formEditar'])->name('admin.hoteles.editar');
     Route::put('/hoteles/{id_hotel}/actualizar', [HotelController::class, 'actualizarHotel'])->name('hotel.actualizar');

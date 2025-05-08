@@ -200,4 +200,51 @@ public function calendarioReservasAdmin(Request $request)
         return view('Admin.listar_reservas', compact('reservas'));
     }
 
+
+    // Mostrar el formulario para registrar un usuario corporativo
+     public function showformRegistrarCorporativo()
+    {
+            return view('Admin.formRegistrarCorporativo');
+    }
+
+   
+   
+   // registrar cliente corporativo
+   public function registrarCorporativo(Request $request)
+   {
+       $request->validate([
+           'nombre'      => 'required|string|max:255',
+           'apellido1'   => 'required|string|max:255',
+           'apellido2'   => 'required|string|max:255',
+           'direccion'   => 'required|string|max:255',
+           'codigoPostal'=> 'required|string|max:10',
+           'ciudad'      => 'required|string|max:100',
+           'pais'        => 'required|string|max:100',
+           'email'       => 'required|email|unique:transfer_viajeros,email',
+           'password'    => 'required|string|min:8|confirmed',
+       ]);
+   
+       try {
+           $cliente = new Cliente();
+           $cliente->nombre        = $request->nombre;
+           $cliente->apellido1     = $request->apellido1;
+           $cliente->apellido2     = $request->apellido2;
+           $cliente->direccion     = $request->direccion;
+           $cliente->codigoPostal  = $request->codigoPostal;
+           $cliente->ciudad        = $request->ciudad;
+           $cliente->pais          = $request->pais;
+           $cliente->email         = $request->email;
+           $cliente->password      = Hash::make($request->password);
+           $cliente->tipo_cliente  = 'corporativo';
+           $cliente->save();
+   
+           return redirect()->route('admin.corporativos.form')
+                           ->with('success', '✅ Usuario corporativo registrado correctamente.');
+       } catch (\Exception $e) {
+           return back()->withInput()
+               ->with('error', '❌ Error al registrar el usuario corporativo: ' . $e->getMessage());
+       }
+   }
+   
+
 }

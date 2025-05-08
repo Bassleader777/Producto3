@@ -19,6 +19,8 @@
             <li><a href="{{ url('/admin/hoteles') }}">🏨 Gestionar Hoteles</a></li>
             <li><a href="{{ url('/admin/vehiculos') }}">🚗 Gestionar Vehículos</a></li>
             <li><a href="{{ url('/admin/reportes') }}">📊 Ver Reportes de Actividad</a></li>
+            <li><a href="{{ url('/admin/corporativos/crear') }}">🏢 Registrar Usuario Corporativo</a></li>
+
         </ul>
 
         <div class="volver-menu">

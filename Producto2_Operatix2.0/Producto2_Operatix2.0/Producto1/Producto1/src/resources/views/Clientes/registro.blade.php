@@ -4,12 +4,74 @@
     <meta charset="UTF-8">
     <title>Registro de Usuario</title>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <style>
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 40px;
+        }
+
+        .form-grid > div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-actions {
+            grid-column: span 2;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .error ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .login-container {
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #e6f8e6;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+
+        input, label {
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
 </head>
 <body>
 
 <div class="login-container">
     <form action="{{ route('cliente.registro') }}" method="POST">
-        <h2>Registro de Usuario</h2>
+        <h2 style="text-align: center;">Registro de Usuario</h2>
         @csrf
 
         {{-- Errores de validación --}}
@@ -79,16 +141,10 @@
                 <input type="password" id="password_confirmation" name="password_confirmation" required>
             </div>
 
-            <div>
-                <label for="tipo_cliente">Tipo de Cliente:</label>
-                <select name="tipo_cliente" id="tipo_cliente" required>
-                    <option value="particular" {{ old('tipo_cliente') == 'particular' ? 'selected' : '' }}>Particular</option>
-                    <option value="corporativo" {{ old('tipo_cliente') == 'corporativo' ? 'selected' : '' }}>Corporativo</option>
-                </select>
+            <div class="form-actions">
+                <button type="submit">Registrarse</button>
             </div>
         </div>
-
-        <button type="submit">Registrarse</button>
 
         <p class="register-link">
             ¿Ya tienes una cuenta? <a href="{{ route('login.form') }}">Inicia sesión</a>
