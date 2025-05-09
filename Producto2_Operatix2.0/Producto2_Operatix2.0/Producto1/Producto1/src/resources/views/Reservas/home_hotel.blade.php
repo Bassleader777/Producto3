@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Panel Corporativo</title>
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/styles.css') }}">
 </head>
 <body>
+<h1 class="titulo-secundario">Isla Transfers</h1>
 
 <div class="panel-container"> {{-- Usa el mismo estilo que home_cliente --}}
     <h2>Bienvenido al Panel Corporativo</h2>

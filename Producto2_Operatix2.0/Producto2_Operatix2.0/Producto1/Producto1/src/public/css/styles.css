@@ -20,7 +20,7 @@ body::before {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: url('/public/img/fondo_palmeras.png');
+  background: url('/img/fondo_palmeras.png') no-repeat center center;
   background-size: cover;
   filter: blur(6px) brightness(0.85);
   z-index: -1;
@@ -954,5 +954,111 @@ button[type="submit"]:hover {
   margin: 2rem auto;
   position: relative;
   z-index: 1;
+}
+
+.titulo-principal {
+    position: absolute;
+    top: 3rem;
+    width: 100%;
+    text-align: center;
+    font-size: 4.5rem;
+    font-weight: 800;
+    color: #34a853; 
+    -webkit-text-stroke: 2px rgb(25, 87, 59); 
+    text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+    font-family: 'Segoe UI', 'Poppins', sans-serif;
+    z-index: 2;
+    letter-spacing: 1px;
+    animation: fadeInDown 1.2s ease-out;
+}
+
+.titulo-secundario {
+    position: absolute;
+    top: 3.5rem; 
+    width: 100%;
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 800;
+    color: #34a853;
+    -webkit-text-stroke: 1px #1e4d2b;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+    font-family: 'Segoe UI', sans-serif;
+    z-index: 2;
+}
+
+
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.success {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #c3e6cb;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.error-alert {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.panel-links a {
+  transition: transform 0.2s ease-in-out;
+}
+.panel-links a:hover {
+  transform: scale(1.05);
+}
+
+button[type="submit"],
+.reserva button,
+.formulario-reserva button,
+.formulario-perfil button,
+.editar-vehiculo-container form button {
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button[type="submit"]:hover,
+.reserva button:hover,
+.formulario-reserva button:hover,
+.formulario-perfil button:hover,
+.editar-vehiculo-container form button:hover {
+  transform: scale(1.02);
+}
+
+/*Inicio sesión exitoso*/
+.alert.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 2px solid #28a745;
+  padding: 12px 20px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 

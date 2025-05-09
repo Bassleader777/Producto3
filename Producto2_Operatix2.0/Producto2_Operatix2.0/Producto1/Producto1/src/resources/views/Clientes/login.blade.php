@@ -6,17 +6,26 @@
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 </head>
 <body>
-    <div class="login-container">
+    <h1 class="titulo-principal">Isla Transfers</h1>
 
-        {{-- Mensajes de error generales --}}
+    <div class="login-container">
+        @if (session('success'))
+            <div class="success">
+            {{ session('success') }}
+            </div>
+        @endif
+
+        {{-- Mensajes de error --}}
         @if(session('error'))
             <p class="error">{{ session('error') }}</p>
         @endif
 
-        {{-- Error de autenticación --}}
-        @if($errors->has('login_error'))
-            <p class="error">{{ $errors->first('login_error') }}</p>
+        @if ($errors->has('login_error'))
+            <div class="error-alert">
+                {{ $errors->first('login_error') }}
+            </div>
         @endif
+
 
         <form action="{{ route('login') }}" method="POST">
             <h1>Iniciar sesión</h1>
@@ -36,4 +45,5 @@
         </form>
     </div>
 </body>
+
 </html>

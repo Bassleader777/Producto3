@@ -8,28 +8,35 @@
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 </head>
 <body>
+    <h1 class="titulo-secundario">Isla Transfers</h1>
 
-<div class="panel-container">
-    <h2>Bienvenido al Panel de Cliente</h2>
+    <div class="panel-container">
+        @if(session('success'))
+        <div class="alert success">
+            {{ session('success') }}
+        </div>
+        @endif
 
-    @php
-        $tipo = Auth::user()->tipo_cliente ?? 'particular';
-    @endphp
+        <h2>Bienvenido al Panel de Cliente</h2>
 
-    @if ($tipo === 'corporativo')
-        <p><strong>Acceso corporativo:</strong> Estás identificado como un cliente corporativo. Disfruta de nuestros servicios especiales.</p>
-    @else
-        <p>Desde este panel, puedes gestionar tus reservas, editar tu perfil y más.</p>
-    @endif
+        @php
+            $tipo = Auth::user()->tipo_cliente ?? 'particular';
+        @endphp
 
-    <ul class="panel-links">
-    <li><a href="{{ route('reserva.listar') }}">📋 Mis Reservas</a></li>
-    <li><a href="{{ route('reserva.crear.form') }}">✈️ Crear Nueva Reserva</a></li>
-    <li><a href="{{ route('cliente.perfil') }}">👤 Editar Perfil</a></li>
-    <li><a href="{{ route('cliente.logout') }}">🚪 Cerrar sesión</a></li>
-    </ul>
-    @yield('content')  <!-- 👈 Añade esto -->
-</div>
+        @if ($tipo === 'corporativo')
+            <p><strong>Acceso corporativo:</strong> Estás identificado como un cliente corporativo. Disfruta de nuestros servicios especiales.</p>
+        @else
+            <p>Desde este panel, puedes gestionar tus reservas, editar tu perfil y más.</p>
+        @endif
+
+        <ul class="panel-links">
+        <li><a href="{{ route('reserva.listar') }}">📋 Mis Reservas</a></li>
+        <li><a href="{{ route('reserva.crear.form') }}">✈️ Crear Nueva Reserva</a></li>
+        <li><a href="{{ route('cliente.perfil') }}">👤 Editar Perfil</a></li>
+        <li><a href="{{ route('cliente.logout') }}">🚪 Cerrar sesión</a></li>
+        </ul>
+        @yield('content') 
+    </div>
 
 </body>
 </html>

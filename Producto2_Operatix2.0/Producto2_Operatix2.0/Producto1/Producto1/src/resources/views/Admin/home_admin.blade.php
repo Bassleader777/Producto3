@@ -5,9 +5,9 @@
     <title>Panel de Administración</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+
 </head>
 <body>
-
     <div class="panel-container">
         <h2>Bienvenido al Panel de Administración</h2>
         <p>Desde este panel, el administrador puede gestionar todas las reservas, usuarios y otros aspectos del sistema.</p>
@@ -21,14 +21,15 @@
             <li><a href="{{ url('/admin/reportes') }}">📊 Ver Reportes de Actividad</a></li>
             <li><a href="{{ url('/admin/corporativos/crear') }}">🏢 Registrar Usuario Corporativo</a></li>
             <li><a href="{{ url('/admin/comisiones') }}">💰 Ver Resumen de Comisiones</a></li>
-        </ul>
+            <li>
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">🚪 Cerrar sesión</a>
 
-        <div class="volver-menu">
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit">← Cerrar sesión</button>
-            </form>
-        </div>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            </li>
+
+        </ul>
     </div>
 
 </body>
