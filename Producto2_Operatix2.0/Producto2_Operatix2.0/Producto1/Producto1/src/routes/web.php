@@ -35,9 +35,17 @@ Route::prefix('cliente')->middleware('auth')->group(function () {
 Route::get('/cliente/registro', [ClienteController::class, 'formRegistro'])->name('cliente.registro.form');
 Route::post('/cliente/registro', [ClienteController::class, 'registrarCliente'])->name('cliente.registro');
 
+
 // === HOTEL ===
 Route::prefix('hotel')->middleware('auth')->group(function () {
     Route::get('/home', fn() => view('Reservas.home_hotel'))->name('hotel.home');
+    
+    // Rutas para las reservas del hotel
+    Route::get('/reservas/crear', [HotelController::class, 'formCrearReserva'])->name('hotel.reserva.form'); // Formulario de crear reserva (Hotel)
+    Route::post('/reservas/crear', [HotelController::class, 'procesarReserva'])->name('hotel.reserva.crear'); // Procesar reserva (Hotel)
+
+    // Rutas para listar las reservas del hotel
+    Route::get('/reservas', [HotelController::class, 'listarReservas'])->name('hotel.reservas'); // Listar reservas (Hotel)
 });
 
 Route::get('/hotel/registro', [HotelController::class, 'formularioRegistro'])->name('hotel.registro.form');
@@ -45,29 +53,27 @@ Route::post('/hotel/registro', [HotelController::class, 'registrar'])->name('hot
 
 // === RESERVAS ===
 Route::prefix('reserva')->middleware('auth')->group(function () {
-    Route::get('/crear', [ReservaController::class, 'formCrear'])->name('reserva.crear.form');
-    Route::post('/crear', [ReservaController::class, 'crearReserva'])->name('reserva.crear');
+    // Rutas para la creación de reservas (Cliente)
+    Route::get('/crear', [ReservaController::class, 'formCrear'])->name('reserva.crear.form'); // Formulario de crear reserva
+    Route::post('/crear', [ReservaController::class, 'crearReserva'])->name('reserva.crear'); // Procesar la reserva
 
+    // Rutas para listar reservas (Cliente)
     Route::get('/listar', [ReservaController::class, 'listarReservas'])->name('reserva.listar');
-    Route::get('/detalle/{id}', [ReservaController::class, 'detalle'])->name('reserva.detalle');
 
-    Route::get('/modificar', [ReservaController::class, 'formModificar'])->name('reserva.modificar.form');
-    Route::post('/modificar', [ReservaController::class, 'modificar'])->name('reserva.modificar');
+    // Rutas para ver detalles de la reserva
+    Route::get('/detalle/{id}', [ReservaController::class, 'verReserva'])->name('reserva.detalle');
 
-    Route::post('/eliminar', [ReservaController::class, 'eliminar'])->name('reserva.eliminar');
+    // Rutas para modificar reservas (Cliente)
+    Route::get('/modificar/{id_reserva}', [ReservaController::class, 'formModificar'])->name('reserva.modificar.form'); // Formulario de modificación
+    Route::post('/modificar/{id_reserva}', [ReservaController::class, 'modificarReserva'])->name('reserva.modificar'); // Procesar modificación
 
+    // Ruta para eliminar reserva
+    Route::post('/eliminar', [ReservaController::class, 'eliminarReserva'])->name('reserva.eliminar'); // Eliminar reserva
+
+    // Rutas para calendario de reservas (Cliente)
     Route::get('/calendario', [ReservaController::class, 'mostrarCalendario'])->name('reserva.calendario');
-
-
-    Route::get('/gestionar/hoteles', fn() => view('Reservas.gestionar_hoteles'))->name('reserva.hoteles.gestionar');
-    Route::get('/gestionar/vehiculos', fn() => view('Reservas.gestionar_vehiculos'))->name('reserva.vehiculos.gestionar');
-
-    Route::get('/editar/hotel', fn() => view('Reservas.editar_hotel'))->name('reserva.editar.hotel');
-    Route::get('/editar/vehiculos', fn() => view('Reservas.editar_vehiculos'))->name('reserva.editar.vehiculo');
-
-    Route::get('/eliminar', fn() => view('Reservas.eliminar_reserva'))->name('reserva.eliminar.form');
-    Route::get('/modificar/cliente', fn() => view('Reservas.modificar_Reserva'))->name('reserva.modificar.cliente');
 });
+
 
     // === ADMINISTRACIÓN ===
 
@@ -135,11 +141,10 @@ Route::prefix('reserva')->middleware('auth')->group(function () {
     Route::get('/hotel/reservas', [HotelController::class, 'listarReservas'])->name('hotel.reservas');
     Route::get('/reservas', [HotelController::class, 'listarReservas'])->name('hotel.reservas');
 
-    //Home hotel
-    Route::get('/crear_reserva', [HotelController::class, 'formCrearReserva'])->name('hotel.reservas.crear');
-    Route::get('/perfil', [HotelController::class, 'editarPerfil'])->name('hotel.perfil');
 
-    
+    //USUARIO CORPORATIVO
+    Route::get('/perfil', [HotelController::class, 'editarPerfil'])->name('hotel.perfil');
+    Route::put('/hotel/perfil', [HotelController::class, 'updatePerfil'])->name('hotel.updatePerfil');
 });
 
 

@@ -30,33 +30,47 @@ class ReservaController extends Controller
         return view('reservas.listar', compact('reservas'));
     }
     public function formCrear()
-    {
-        $hoteles = Hotel::all();
-        $vehiculos = Vehiculo::all();
+{
+    $hoteles = Hotel::all();
+    $vehiculos = Vehiculo::all();
 
-        $tipo_cliente = Auth::check() ? Auth::user()->tipo_cliente : 'cliente';
-        $volver_url = $tipo_cliente === 'administrador'
-            ? route('admin.home')
-            : route('cliente.home');
+    $tipo_cliente = Auth::check() ? Auth::user()->tipo_cliente : 'cliente';
+    $volver_url = $tipo_cliente === 'administrador'
+        ? route('admin.home')
+        : route('cliente.home');
 
-        $email = Auth::check() ? Auth::user()->email : null;
+    $email = Auth::check() ? Auth::user()->email : null;
 
-        return view('Reservas.crear_reserva_cliente', compact('hoteles', 'vehiculos', 'volver_url', 'email'));
-    }
+    return view('Reservas.crear_reserva_cliente', compact('hoteles', 'vehiculos', 'volver_url', 'email', 'tipo_cliente'));
+}
+
 
     public function crearReserva(Request $request)
     {
-       // dd($request->all());
+        $usuario = Auth::user();
+        $esCorporativo = $usuario && $usuario->tipo_cliente === 'corporativo';
 
-        $request->validate([
-            'id_hotel' => 'required|integer',
+        $reglas = [
             'id_tipo_reserva' => 'required|integer',
             'fecha_entrada' => 'required|date',
             'hora_entrada' => 'nullable|date_format:H:i',
             'num_viajeros' => 'required|integer|min:1',
-            'numero_vuelo_entrada' => 'required|string',
             'precio' => 'required|numeric|min:0',
-        ]);
+            'email_cliente' => 'required|email',
+            'id_destino' => 'required|integer',
+            'fecha_vuelo_salida' => 'required|date',
+            'id_vehiculo' => 'nullable|integer',
+        ];
+        
+        if ($esCorporativo) {
+            $reglas['id_hotel'] = 'required|integer';
+            $reglas['numero_vuelo_entrada'] = 'required|string|max:50';
+            $reglas['origen_vuelo_entrada'] = 'required|string|max:50';
+            $reglas['hora_vuelo_salida'] = 'nullable|date_format:H:i';
+        }
+        
+        $validated = $request->validate($reglas);
+        
 
         try {
             $localizador = strtoupper(bin2hex(random_bytes(4)));
@@ -69,21 +83,21 @@ class ReservaController extends Controller
             }
 
             $reserva = new Reserva([
-                'localizador' => $localizador,
-                'id_hotel' => $request->id_hotel,
-                'id_tipo_reserva' => $request->id_tipo_reserva,
-                'email_cliente' => $email,
-                'fecha_entrada' => $request->fecha_entrada,
-                'hora_entrada' => $request->hora_entrada,
-                'numero_vuelo_entrada' => $request->numero_vuelo_entrada,
-                'origen_vuelo_entrada' => $request->origen_vuelo_entrada,
-                'fecha_vuelo_salida' => $request->fecha_vuelo_salida,
-                'hora_vuelo_salida' => $request->hora_vuelo_salida,
-                'num_viajeros' => $request->num_viajeros,
-                'id_destino' => $idDestino,
-                'id_vehiculo' => $idVehiculo,
-                'precio' => $request->precio,
-                'fecha_reserva' => now(), 
+                'localizador' => strtoupper(bin2hex(random_bytes(4))),
+                'id_hotel' => $validated['id_hotel'] ?? null,
+                'id_tipo_reserva' => $validated['id_tipo_reserva'],
+                'email_cliente' => $validated['email_cliente'],
+                'fecha_entrada' => $validated['fecha_entrada'],
+                'hora_entrada' => $validated['hora_entrada'],
+                'numero_vuelo_entrada' => $validated['numero_vuelo_entrada'] ?? null,
+                'origen_vuelo_entrada' => $validated['origen_vuelo_entrada'] ?? null,
+                'fecha_vuelo_salida' => $validated['fecha_vuelo_salida'],
+                'hora_vuelo_salida' => $validated['hora_vuelo_salida'] ?? null,
+                'num_viajeros' => $validated['num_viajeros'],
+                'id_destino' => $validated['id_destino'],
+                'id_vehiculo' => $validated['id_vehiculo'] ?? null,
+                'precio' => $validated['precio'],
+                'fecha_reserva' => now(),
                 'fecha_modificacion' => now(),
             ]);
 
@@ -202,6 +216,5 @@ class ReservaController extends Controller
             'fecha_fin' => $fecha_fin,
         ]);
     }
-    
 
 }

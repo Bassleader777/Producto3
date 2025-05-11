@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Reservas del Hotel</title>
+    <title>Mis Reservas</title>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 </head>
 <body>
 
 <div class="reservas">
-    <h2 class="titulo-reservas">Reservas Asignadas a tu Hotel</h2>
+    <h2 class="titulo-reservas">Reservas hechas a tu hotel</h2>
 
     @if (!empty($reservas) && $reservas->count())
         @foreach ($reservas as $reserva)
@@ -24,7 +24,7 @@
             </div>
         @endforeach
     @else
-        <p>No hay reservas asociadas a tu hotel aún.</p>
+        <p>No tienes reservas registradas aún.</p>
     @endif
 
     <div class="volver-menu">

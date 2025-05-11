@@ -14,7 +14,7 @@
 
     <ul class="panel-links">
         <li><a href="{{ route('hotel.reservas') }}">📋 Ver Reservas</a></li>
-        <li><a href="{{ route('hotel.reservas.crear') }}">➕ Realizar Nueva Reserva</a></li>
+        <li><a href="{{ route('hotel.reserva.form') }}">➕ Realizar Nueva Reserva</a></li>
         <li><a href="{{ route('hotel.perfil') }}">👤 Editar Perfil del Hotel</a></li>
         <li><a href="{{ route('cliente.logout') }}">🚪 Cerrar sesión</a></li>
     </ul>

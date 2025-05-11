@@ -9,7 +9,7 @@
 <body>
 
 <div class="registro-container">
-    <h2 class="titulo-registro">➕ Registrar Usuario Corporativo</h2>
+    
 
     @if (session('success'))
         <div class="mensaje-exito">{{ session('success') }}</div>
@@ -20,6 +20,7 @@
     @endif
 
     <form method="POST" action="{{ route('admin.corporativos.store') }}">
+    <h2 class="titulo-registro">➕ Registrar Usuario Corporativo</h2>
     @csrf
 
     <label for="nombre">Nombre del Responsable:</label>
@@ -53,12 +54,14 @@
     <input type="password" id="password_confirmation" name="password_confirmation" required>
 
     <button type="submit">Registrar Usuario Corporativo</button>
-</form>
-
 
     <div class="volver-menu">
         <a href="{{ route('admin.home') }}">← Volver al Panel de Administración</a>
     </div>
+</form>
+
+
+    
 </div>
 
 </body>

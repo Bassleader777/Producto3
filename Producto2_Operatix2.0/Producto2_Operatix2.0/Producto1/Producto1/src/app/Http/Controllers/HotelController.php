@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hotel;
-use App\Models\Zona; // Asumiendo que tienes el modelo Zona
+use App\Models\Zona; 
+use App\Models\Reserva;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -128,7 +129,7 @@ class HotelController extends Controller
     }
 
     public function formEditar(Request $request)
-{
+    {
     $id_hotel = $request->query('id');
 
     $hotel = Hotel::find($id_hotel);
@@ -141,11 +142,11 @@ class HotelController extends Controller
     $zonas = Zona::all();
 
     return view('Reservas.editar_hotel', compact('hotel', 'zonas'));
-}
+    }
     
 
 
-public function crearHotel()
+    public function crearHotel()
     {
     // Obtener las zonas para mostrarlas en el formulario
     $zonas = Zona::all();
@@ -157,18 +158,106 @@ public function crearHotel()
 
     public function listarReservas()
     {
-    $hotel = Auth::user(); // El hotel está logueado
+        // Obtener el usuario autenticado
+        $usuario = Auth::user();
+    
+        // Obtener las reservas solo asociadas al usuario autenticado por su email
+        $reservas = \App\Models\Reserva::where('email_cliente', $usuario->email)->get();
+    
+        // Pasar las reservas a la vista
+        return view('Reservas.listar_reservas_hotel', compact('reservas'));
+    }
+    
+    
 
-    $reservas = \App\Models\Reserva::where('id_hotel', $hotel->id_hotel)->get();
+// Mostrar formulario para crear reserva (solo vista)
+    public function formCrearReserva()
+    {
+    $hoteles = Hotel::all();
+    return view('Reservas.crear_reserva_hotel', compact('hoteles'));
+    }
 
-    return view('Reservas.listar_reservas_hotel', compact('reservas'));
-}
+    public function procesarReserva(Request $request)
+    {
+    // Obtén al usuario autenticado
+    $usuario = Auth::user();
+    $esCorporativo = $usuario && $usuario->tipo_cliente === 'corporativo';
 
-public function formCrearReserva()
-{
-    // Puedes pasar datos necesarios a la vista si los necesitas
-    return view('Reservas.crear_reserva_hotel');
-}
+    // Reglas de validación específicas
+    $reglas = [
+        'id_tipo_reserva' => 'required|integer',
+        'fecha_entrada' => 'required|date',
+        'hora_entrada' => 'nullable|date_format:H:i',
+        'num_viajeros' => 'required|integer|min:1',
+        'precio' => 'required|numeric|min:0',
+        'email_cliente' => 'required|email',
+        'id_destino' => 'required|integer',
+        'fecha_vuelo_salida' => 'required|date',
+        'id_vehiculo' => 'nullable|integer',
+    ];
 
+    if ($esCorporativo) {
+        // Para clientes corporativos, se añaden reglas adicionales
+        $reglas['id_hotel'] = 'required|integer';
+        $reglas['numero_vuelo_entrada'] = 'required|string|max:50';
+        $reglas['origen_vuelo_entrada'] = 'required|string|max:50';
+        $reglas['hora_vuelo_salida'] = 'nullable|date_format:H:i';
+    }
+
+    // Validar los datos del formulario
+    $validated = $request->validate($reglas);
+
+    try {
+        // Generar un localizador único
+        $localizador = strtoupper(bin2hex(random_bytes(4)));
+        $idDestino = $request->id_destino ?? $request->id_hotel;
+        $idVehiculo = $request->id_vehiculo ?? null;
+        $email = Auth::check() ? Auth::user()->email : null;
+
+        // Si el usuario no está autenticado, redirigir al login
+        if (!$email) {
+            return redirect()->route('login.form')->with('error', 'Debes iniciar sesión para crear una reserva.');
+        }
+
+        // Crear la reserva en la base de datos
+        $reserva = new Reserva([
+            'localizador' => strtoupper(bin2hex(random_bytes(4))),
+            'id_hotel' => $validated['id_hotel'] ?? null,
+            'id_tipo_reserva' => $validated['id_tipo_reserva'],
+            'email_cliente' => $validated['email_cliente'],
+            'fecha_entrada' => $validated['fecha_entrada'],
+            'hora_entrada' => $validated['hora_entrada'],
+            'numero_vuelo_entrada' => $validated['numero_vuelo_entrada'] ?? null,
+            'origen_vuelo_entrada' => $validated['origen_vuelo_entrada'] ?? null,
+            'fecha_vuelo_salida' => $validated['fecha_vuelo_salida'],
+            'hora_vuelo_salida' => $validated['hora_vuelo_salida'] ?? null,
+            'num_viajeros' => $validated['num_viajeros'],
+            'id_destino' => $validated['id_destino'],
+            'id_vehiculo' => $validated['id_vehiculo'] ?? null,
+            'precio' => $validated['precio'],
+            'fecha_reserva' => now(),
+            'fecha_modificacion' => now(),
+        ]);
+
+        $reserva->save();
+
+        // Redirigir según el tipo de usuario
+        if (Auth::check() && Auth::user()->tipo_cliente === 'administrador') {
+            return redirect()->route('admin.reservas.listar')->with('success', 'Reserva creada con éxito.');
+        } else {
+            return redirect()->route('hotel.reservas')->with('success', 'Reserva creada con éxito.');
+        }
+        
+    } catch (\Exception $e) {
+        // Manejar errores
+        return back()->with('error', 'Error al crear la reserva: ' . $e->getMessage());
+    }
+    }
+    public function editarPerfil()
+    {
+    $hotel = Auth::user(); // Ya que el usuario autenticado es el hotel
+    return view('Reservas.perfil_hotel', compact('hotel'));
+
+    }
 
 }

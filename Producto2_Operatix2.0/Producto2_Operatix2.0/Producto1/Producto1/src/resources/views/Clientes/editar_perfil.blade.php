@@ -9,7 +9,6 @@
 <body>
 
 <div class="login-container">
-    <h2>Editar Perfil</h2>
 
     {{-- Mensaje de éxito --}}
     @if (session('success'))
@@ -28,6 +27,7 @@
     @endif
 
     <form action="{{ route('cliente.perfil.actualizar') }}" method="POST">
+        <h2>Editar Perfil</h2>
         @csrf
 
         <label for="nombre">Nombre:</label>
@@ -46,11 +46,11 @@
         <input type="password" id="password_confirmation" name="password_confirmation">
 
         <button type="submit">Guardar Cambios</button>
-    </form>
 
-    <div class="volver-menu">
-        <a href="{{ route('cliente.home') }}">← Volver al panel</a>
-    </div>
+        <div class="volver-menu">
+            <a href="{{ route('cliente.home') }}">← Volver al panel</a>
+        </div>
+    </form>
 </div>
 
 </body>
